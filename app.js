@@ -3,7 +3,7 @@ const BASE_URL = "https://gitlab.com/Mahadi07/rtejhs/-/raw/main/EdData/data";
 const state = {
     region: 'IN', // Default: Hindu User
     suffix: 'EnToHn',
-    view: 'articles',
+    view: 'wod',
     dateStrings: {},
     data: { wordOfDay: null, vocab: [], articles: [], quiz: [] }
 };
@@ -28,7 +28,9 @@ function setupDateStrings() {
     state.dateStrings = {
         daily: `${day}-${month}-${year}`,
         monthly: `${month}-${year}`,
-        searchDate: `${day} ${monthName} ${year}` // Matches "01 April 2026" or "24 April 2026"
+        year: year,
+        month: month,
+        searchDate: `${day} ${monthName} ${year}` 
     };
 }
 
@@ -40,15 +42,17 @@ async function init() {
     const picker = document.getElementById('region-picker');
     if (picker) picker.onchange = (e) => switchRegion(e.target.value);
     
+    const btnWod = document.getElementById('tab-wod');
     const btnArticles = document.getElementById('tab-articles');
     const btnVocab = document.getElementById('tab-vocab');
     const btnQuiz = document.getElementById('tab-quiz');
 
+    if (btnWod) btnWod.onclick = () => switchTab('wod');
     if (btnArticles) btnArticles.onclick = () => switchTab('articles');
     if (btnVocab) btnVocab.onclick = () => switchTab('vocab');
     if (btnQuiz) btnQuiz.onclick = () => switchTab('quiz');
 
-    switchTab('articles'); // Ensure preselected state is handled
+    switchTab('wod'); // Preselect Word of the Day
 
     // 2. Initial Load (Default IN)
     loadAllData();
@@ -98,28 +102,30 @@ async function loadAllData() {
     toggleLoader(true);
     try {
         const suffix = state.suffix;
+        const { daily, monthly, year, month } = state.dateStrings;
+        const regionFolder = state.region === 'IN' ? 'india' : 'bangladesh';
+
+        // New Article Path: EdData/data/articles/india/2026/04/03-04-2026.json
+        const articlePath = `${BASE_URL}/articles/${regionFolder}/${year}/${month}/${daily}.json`;
+
         const apiRequests = [
-            fetch(`${BASE_URL}/WordOfTheDay${suffix}/${state.dateStrings.monthly}.json`).then(r => r.ok ? r.json() : null),
-            fetch(`${BASE_URL}/${suffix}Word/${state.dateStrings.daily}.json`).then(r => r.ok ? r.json() : null),
-            fetch(`${BASE_URL}/DayOfTheQuiz${suffix}/${state.dateStrings.daily}.json`).then(r => r.ok ? r.json() : null),
-            fetch(`${BASE_URL}/articles_${state.region.toLowerCase()}.json`).then(r => r.ok ? r.json() : null)
+            fetch(`${BASE_URL}/WordOfTheDay${suffix}/${monthly}.json`).then(r => r.ok ? r.json() : null),
+            fetch(`${BASE_URL}/${suffix}Word/${daily}.json`).then(r => r.ok ? r.json() : null),
+            fetch(`${BASE_URL}/DayOfTheQuiz${suffix}/${daily}.json`).then(r => r.ok ? r.json() : null),
+            fetch(articlePath).then(r => r.ok ? r.json() : null)
         ];
 
         const [wodRes, vocabRes, quizRes, artRes] = await Promise.allSettled([
             ...apiRequests
         ]);
 
-        // Word of the Day is usually a flat array
         state.data.wordOfDay = (wodRes.status === 'fulfilled' && wodRes.value) ? wodRes.value.find(i => i.date.includes(state.dateStrings.searchDate)) : null;
         
-        // Other features often have wrapper keys
         state.data.vocab = (vocabRes.status === 'fulfilled' && vocabRes.value) ? (vocabRes.value.wordMeaning || []) : [];
         state.data.quiz = (quizRes.status === 'fulfilled' && quizRes.value) ? (quizRes.value.questions || []) : [];
         
-        // Articles might be wrapped in { "articles": [...] }
         state.data.articles = (artRes.status === 'fulfilled' && artRes.value) ? (artRes.value.articles || artRes.value) : [];
 
-        renderWordOfDay();
         renderCurrentView();
     } catch (err) {
         console.error("Data load error", err);
@@ -127,33 +133,29 @@ async function loadAllData() {
     toggleLoader(false);
 }
 
-function renderWordOfDay() {
-    const container = document.getElementById('word-of-day-container');
-    if (!container) return;
-    
-    const wod = state.data.wordOfDay;
-    if (!wod) { 
-        container.innerHTML = `<p style="padding:10px; font-size:0.8rem; color:gray;">Word of the Day not available for ${state.dateStrings.searchDate}</p>`; 
-        return; 
-    }
-    
-    const mKey = state.region === 'BD' ? 'bangla_meaning' : 'hindi_meaning';
-    container.innerHTML = `
-        <div class="word-of-day">
-            <h3>Word of the Day</h3>
-            <div class="word">${wod.word}</div>
-            <div class="phonetic">${wod.phonetic || ''} <small>${wod.part_of_speech || ''}</small></div>
-            <div class="meaning">${wod[mKey] || ''}</div>
-        </div>`;
-}
-
 function renderCurrentView() {
     const container = document.getElementById('main-content');
     if (!container) return;
     
-    if (state.view === 'articles') {
+    if (state.view === 'wod') {
+        const wod = state.data.wordOfDay;
+        if (!wod) {
+            container.innerHTML = `<p class="error-msg">Word of the Day not available for ${state.dateStrings.searchDate}</p>`;
+            return;
+        }
+        const mKey = state.region === 'BD' ? 'bangla_meaning' : 'hindi_meaning';
+        container.innerHTML = `
+            <div class="word-of-day-detail">
+                <h2 style="color:var(--primary-color)">${wod.word}</h2>
+                <p><i>${wod.phonetic || ''} - ${wod.part_of_speech || ''}</i></p>
+                <h3 style="margin-top:20px">${wod[mKey] || ''}</h3>
+                <hr>
+                <p><b>Definition:</b> ${wod.definition || ''}</p>
+                <p><b>Example:</b> ${wod.example || ''}</p>
+            </div>`;
+    } else if (state.view === 'articles') {
         if (!state.data.articles || state.data.articles.length === 0) {
-            container.innerHTML = '<p class="error-msg">No articles found for this region.</p>';
+            container.innerHTML = `<p class="error-msg">No articles found for ${state.dateStrings.daily}. Path checked: articles/${state.region === 'IN' ? 'india' : 'bangladesh'}/${state.dateStrings.year}/${state.dateStrings.month}/</p>`;
             return;
         }
         container.innerHTML = state.data.articles.map(a => `<div class="article-item"><h2>${a.title}</h2><p>${a.description}</p></div>`).join('');
