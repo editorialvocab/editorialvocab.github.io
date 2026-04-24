@@ -124,7 +124,7 @@ async function loadAllData() {
         state.data.vocab = (vocabRes.status === 'fulfilled' && vocabRes.value) ? (vocabRes.value.wordMeaning || []) : [];
         state.data.quiz = (quizRes.status === 'fulfilled' && quizRes.value) ? (quizRes.value.questions || []) : [];
         
-        state.data.articles = (artRes.status === 'fulfilled' && artRes.value) ? (artRes.value.articles || artRes.value) : [];
+        state.data.articles = (artRes.status === 'fulfilled' && artRes.value) ? (artRes.value.articles || []) : [];
 
         renderCurrentView();
     } catch (err) {
@@ -154,11 +154,22 @@ function renderCurrentView() {
                 <p><b>Example:</b> ${wod.example || ''}</p>
             </div>`;
     } else if (state.view === 'articles') {
-        if (!state.data.articles || state.data.articles.length === 0) {
+        const articles = state.data.articles;
+        if (!articles || articles.length === 0) {
             container.innerHTML = `<p class="error-msg">No articles found for ${state.dateStrings.daily}. Path checked: articles/${state.region === 'IN' ? 'india' : 'bangladesh'}/${state.dateStrings.year}/${state.dateStrings.month}/</p>`;
             return;
         }
-        container.innerHTML = state.data.articles.map(a => `<div class="article-item"><h2>${a.title}</h2><p>${a.description}</p></div>`).join('');
+        container.innerHTML = articles.map(a => `
+            <div class="article-item" style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 15px;">
+                <small style="color: var(--primary-color); font-weight: bold;">${a.news_paper_name}</small>
+                <h2 style="margin: 5px 0; font-size: 1.1rem;">${a.headline_1}</h2>
+                <h3 style="margin: 5px 0; font-size: 0.95rem; color: #555; font-weight: normal;">${a.headline_2}</h3>
+                <p style="font-size: 0.9rem; color: #666; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                    ${a.full_article}
+                </p>
+                <a href="${a.link}" target="_blank" style="font-size: 0.8rem; color: var(--primary-color); text-decoration: none;">Read Full Article →</a>
+            </div>
+        `).join('');
     } else if (state.view === 'vocab') {
         if (!state.data.vocab || state.data.vocab.length === 0) {
             container.innerHTML = '<p class="error-msg">Daily vocabulary not found for today.</p>';
