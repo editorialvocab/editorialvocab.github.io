@@ -1,147 +1,39 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-	<meta charset="utf-8">
-	<title>Mahadi Hasan Simlify Coding</title>
-	<base url="https://promahadihasan.github.io/">
-	<meta name="description" content="An interactive getting started guide for Simlify Coding">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="main.css">
-	<link rel="stylesheet" href="w3.css">
-	<script src="main.js"></script>
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bungee+Tint&family=Great+Vibes&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editorial Vocabulary</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Marked.js for Markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
-
 <body>
-	<script src="header.js"></script>
+    <nav class="app-bar">
+        <div class="container">
+            <h1 id="app-title">Editorial Vocabulary</h1>
+            <div class="region-info" id="region-status">Detecting location...</div>
+        </div>
+    </nav>
 
-		<!-- MAIN CONTAINER -->
-	<div class="main coantainer">
-		<!-- MAIN CONTAINER profile-->
-		<div id="main_container">
-			<!-- HEADER -->
-			<div id="header">
-			  <!-- LOGOTYPE/NAME -->
-			  <div class="header_logotype_container">
-				<h1 class="logotype_name">Mahadi <span class="purple">Hasan</span></h1>
-				<h2 class="logotype_occupation">Professional Android Developer</h2>
-			  </div>
-			  <!-- MAIN MENU -->
-			  <div class="header_menu_container">
-				<!-- <ul class="download_print_buttons horizontal_list">
-				  <li><a href="#"><span class="icon entypo-download"></span>Download CV</a></li>
-				  <li><a href="#"><span class="icon entypo-print"></span>Print CV</a></li>
-				</ul> -->
-				<div class="clear"></div>
-				<ul class="header_menu horizontal_list">
-					<li><a class="no_border purple" href="https://promahadihasan.github.io/">Profile</a></li>
-					<li><a href="https://promahadihasan.github.io/education/">Education</a></li>
-					<li><a href="https://promahadihasan.github.io/skills/">Skills</a></li>
-					<li><a href="https://promahadihasan.github.io/projects/">Featured Projects</a></li>
-				  </ul>
-			  </div>
-			</div>
-			<!-- LEFT COL -->
-			<div id="left_col">
-			  <div class="profile_frame">
-				<div class="profile_picture"></div>
-				<!-- <img src="image/me.JPG" alt="profile picture" width="25%"> -->
-			  </div>
-			  <div class="hello_content">
-				<h2>Hi!</h2>
-				<p>I'm passionate about <span class="highlite">Android</span> mobile Apps development technology and its practices, a hard and fast learner with experience in a variety of real world applications.</p>
-			  </div>
-			  <div class="contact_details_content">
-				<h2>Contact details</h2>
-				<p class="purple">Phone:</p>
-				<p>+8801713819045</p>
-				<p class="purple">Email:</p>
-				<p>mahadi129727@gmail.com</p>
-				<p class="purple">Address:</p>
-				<p>Akurtakur Para, Tangail Sadar</p>
-				<p>Tangail, Bangladesh</p>
-			  </div>
-			  <a href="mailto:mahadi129727@gmail.com" class="send_message_button">
-				<span class="cut1"></span>
-				<span class="cut2"></span>
-				<span class="content">Connect with me<span class="fontawesome-double-angle-right"></span></span>
-			  </a>
-			  <div class="get_social_content">
-				<h2>Get social</h2>
-				<ul class="social_icons horizontal_list">
-				  <li><a class="facebook" href="https://github.com/promahadihasan"><span class="entypo-facebook-circled"></span><span class="invisible">Github</span></a></li>
-				  <li><a class="facebook" href="https://www.facebook.com/mahadihasansunny1"><span class="entypo-facebook-circled"></span><span class="invisible">Facebook</span></a></li>
-				  <li><a class="twitter" href="https://twitter.com/promahadihasan"><span class="entypo-twitter-circled"></span><span class="invisible">Twitter</span></a></li>
-				  <li><a class="linkedin" href="https://www.linkedin.com/in/promahadihasan"><span class="entypo-linkedin-circled"></span><span class="invisible">LinkedIn</span></a></li>
-				</ul>
-			  </div>
-			</div>
-			<!-- PROFILE CONTENT -->
-			<div id="content_container">				
-			  <div class="block">
-				<h1>Profile</h1>
-				<blockquote class="profile_quote">
-				  <p>"Seek knowledge from the cradle to the grave.”</p>
-				  <p>Prophet Muhammad (peace be upon him)</p>
-				  <span class="entypo-quote"></span>
-				</blockquote>
-			  </div>
-			  <div class="block">
-				<h2>A few words about me</h2>
-				<p>I am an experienced <span class="highlite">Android</span> developer with more than a decade of experience sharing my expertise in developing applications using <span class="highlite">Java and Kotlin</span> languages. I have worked on various projects ranging from mobile applications to enterprise solutions. I look forward to sharing my knowledge and experience with readers, exploring the latest Android technologies, best practices and secrets to building amazing apps.</p>				
-			  </div>
-			  <div class="horizontal_line">
-				<div class="line_left"></div>
-				<div class="left_circle"></div>
-				<div class="central_circle"></div>
-				<div class="right_circle"></div>
-				<div class="line_right"></div>
-			  </div>
-			  <div class="block">
-				<h2>Philosophy</h2>
-				<p>I belive in ethic and moral not in imposed rules that you "have to" do or follow.</p>
-				<div class="philosophy_content">
-				  <p>I believe that life consists of different shades of gray, not black and white. Also, as a human being, I believe it is our duty to care for the world and to treat others as we would like others to treat us. This way of perceiving reality affects my beliefs and the way I act. Summarizing on several points:</p>
-				  <ul>
-					<li>Honest</li>
-					<li>Energetic</li>
-					<li>Punctual</li>
-					<li>Respectful</li>
-					<li>Well-behaved</li>
-				  </ul>
-				  <div class="clear"></div>
-				</div>
-			  </div>
-			  <div class="horizontal_line">
-				<div class="line_left"></div>
-				<div class="left_circle"></div>
-				<div class="central_circle"></div>
-				<div class="right_circle"></div>
-				<div class="line_right"></div>
-			  </div>
-			  <div class="last block">
-				<h2>Interests & Hobbies</h2>
-				<p><span class="highlite"> Android Apps </span> development technology is a passion of mine that forms almost all my interests and hobbies:</p>
-				<ul>
-				  <li>Visiting new places</li>
-				  <li>Mobile Apps Developing</li>
-				  <li>Learning new technologies</li>
-				  <li>Having new experiences</li>
-				</ul>
-			  </div>
-			</div>
-			<div class="clear"></div>
+    <main class="container">
+        <!-- Tab Switcher -->
+        <div class="tabs">
+            <button id="tab-editorial" class="active">Editorials</button>
+            <button id="tab-vocabulary">Vocabulary</button>
+        </div>
 
-			  <script src="footer.js"></script>
+        <!-- Content Area (Like a FrameLayout in Android) -->
+        <div id="content-loader" class="loader" style="display: none;">Loading from GitLab...</div>
+        <article id="content-view" class="markdown-body">
+            <!-- Data from GitLab will be rendered here -->
+        </article>
+    </main>
 
-	</div>
-	
-	<!-- main end -->
+    <footer class="bottom-nav">
+        <a href="about.html">About Developer</a>
+    </footer>
 
+    <script src="js/app.js"></script>
 </body>
-
 </html>
