@@ -4,30 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editorial Vocabulary</title>
-    <link rel="stylesheet" href="css/style.css">
-    <!-- Marked.js for Markdown parsing -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <nav class="app-bar">
         <div class="container">
-            <h1 id="app-title">Editorial Vocabulary</h1>
-            <div class="region-info" id="region-status">Detecting location...</div>
+            <h1>Editorial Vocabulary</h1>
+            <div id="region-status" class="region-info">Detecting location...</div>
         </div>
     </nav>
 
     <main class="container">
-        <!-- Tab Switcher -->
+        <!-- Word of the Day Section -->
+        <div id="word-of-day-container"></div>
+
         <div class="tabs">
-            <button id="tab-editorial" class="active">Editorials</button>
-            <button id="tab-vocabulary">Vocabulary</button>
+            <button id="tab-articles" class="active">Articles</button>
+            <button id="tab-vocab">10 Daily Vocab</button>
+            <button id="tab-quiz">Quiz</button>
         </div>
 
-        <!-- Content Area (Like a FrameLayout in Android) -->
-        <div id="content-loader" class="loader" style="display: none;">Loading from GitLab...</div>
-        <article id="content-view" class="markdown-body">
-            <!-- Data from GitLab will be rendered here -->
-        </article>
+        <div id="loader" class="loader" style="display: none;">Fetching latest data...</div>
+        
+        <!-- Dynamic Content Area -->
+        <div id="main-content" class="content-card">
+            <!-- JSON data will be rendered here -->
+        </div>
     </main>
 
     <footer class="bottom-nav">

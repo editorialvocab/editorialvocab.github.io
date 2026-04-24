@@ -1,72 +1,139 @@
 :root {
     --primary-color: #6200ee;
-    --bg-color: #f5f5f5;
+    --accent-color: #03dac6;
+    --bg-color: #f5f7fa;
     --card-bg: #ffffff;
-    --text-color: #333;
+    --text-primary: #121212;
+    --text-secondary: #5f6368;
 }
 
 body {
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
     margin: 0;
     background-color: var(--bg-color);
-    color: var(--text-color);
-    line-height: 1.6;
+    color: var(--text-primary);
+    -webkit-tap-highlight-color: transparent;
 }
 
 .container {
-    padding: 0 16px;
-    max-width: 800px;
+    max-width: 600px;
     margin: 0 auto;
+    padding: 0 16px;
 }
 
 .app-bar {
     background-color: var(--primary-color);
     color: white;
-    padding: 10px 0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 16px 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     position: sticky;
     top: 0;
-    z-index: 1000;
+    z-index: 100;
 }
 
-.app-bar h1 { margin: 0; font-size: 1.2rem; }
-.region-info { font-size: 0.8rem; opacity: 0.9; }
+.app-bar h1 { margin: 0; font-size: 1.25rem; font-weight: 500; }
+.region-info { font-size: 0.75rem; opacity: 0.85; margin-top: 4px; }
 
 .tabs {
     display: flex;
-    margin-top: 16px;
-    background: #e0e0e0;
-    border-radius: 8px;
+    margin-top: 20px;
+    background: #e8eaed;
+    border-radius: 12px;
     padding: 4px;
 }
 
 .tabs button {
     flex: 1;
     border: none;
-    padding: 10px;
+    padding: 12px;
     background: transparent;
     cursor: pointer;
-    font-weight: bold;
-    border-radius: 6px;
+    font-weight: 500;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+    color: var(--text-secondary);
 }
 
 .tabs button.active {
     background: white;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    color: var(--primary-color);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
-.markdown-body {
-    margin-top: 20px;
-    padding: 20px;
-    background: var(--card-bg);
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+.loader {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-secondary);
+    font-style: italic;
 }
+
+.content-card {
+    margin: 20px 0 100px 0;
+    padding: 24px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.word-of-day {
+    background: linear-gradient(135deg, var(--primary-color), #7b1fa2);
+    color: white;
+    padding: 20px;
+    border-radius: 16px;
+    margin-bottom: 20px;
+}
+
+.word-of-day h3 { margin: 0; font-size: 0.9rem; text-transform: uppercase; opacity: 0.8; }
+.word-of-day .word { font-size: 2rem; font-weight: bold; margin: 10px 0; }
+.word-of-day .phonetic { font-size: 0.9rem; margin-bottom: 8px; opacity: 0.9; }
+
+.vocab-item {
+    border-bottom: 1px solid #eee;
+    padding: 12px 0;
+}
+.vocab-item:last-child { border-bottom: none; }
+.vocab-word { font-weight: bold; color: var(--primary-color); font-size: 1.1rem; }
+.vocab-meaning { color: var(--text-secondary); margin-top: 4px; }
+
+.article-item {
+    margin-bottom: 24px;
+    cursor: pointer;
+}
+.article-item h2 { margin: 0 0 8px 0; font-size: 1.2rem; color: var(--text-primary); }
+.article-item p { margin: 0; color: var(--text-secondary); font-size: 0.95rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+.quiz-container {
+    text-align: center;
+}
+.quiz-question { font-size: 1.2rem; margin-bottom: 20px; }
+.quiz-question-block {
+    text-align: left;
+    margin-bottom: 30px;
+    border-bottom: 1px dashed #ccc;
+    padding-bottom: 20px;
+}
+.quiz-options { display: grid; gap: 10px; }
+.quiz-option {
+    background: white;
+    padding: 12px;
+    border: 2px solid #eee;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.quiz-option:hover { border-color: var(--primary-color); background: #f3e5f5; }
+
+.error-msg { color: #d32f2f; text-align: center; padding: 20px; font-size: 0.9rem; }
 
 .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
     text-align: center;
-    padding: 20px;
-    margin-top: 40px;
-    border-top: 1px solid #ddd;
+    padding: 16px;
+    border-top: 1px solid #eee;
+    z-index: 99;
 }
-.bottom-nav a { color: var(--primary-color); text-decoration: none; font-weight: bold; }
+.bottom-nav a { color: var(--primary-color); text-decoration: none; font-weight: 500; }
