@@ -9,13 +9,15 @@ const state = {
 };
 
 function setupDateStrings() {
-    let now = new Date();
+    const now = new Date();
 
     // If current time is before 8:30 AM, use yesterday's data
     const hours = now.getHours();
     const minutes = now.getMinutes();
     if (hours < 8 || (hours === 8 && minutes < 30)) {
         now.setDate(now.getDate() - 1);
+    } else {
+        // Ensure we are working with today if it's after 8:30
     }
 
     const day = String(now.getDate()).padStart(2, '0');
@@ -31,15 +33,22 @@ function setupDateStrings() {
 }
 
 async function init() {
+    console.log("App initializing...");
     setupDateStrings();
     
     // 1. Setup UI Listeners
     const picker = document.getElementById('region-picker');
-    picker.onchange = (e) => switchRegion(e.target.value);
+    if (picker) picker.onchange = (e) => switchRegion(e.target.value);
     
-    document.getElementById('tab-articles').onclick = () => switchTab('articles');
-    document.getElementById('tab-vocab').onclick = () => switchTab('vocab');
-    document.getElementById('tab-quiz').onclick = () => switchTab('quiz');
+    const btnArticles = document.getElementById('tab-articles');
+    const btnVocab = document.getElementById('tab-vocab');
+    const btnQuiz = document.getElementById('tab-quiz');
+
+    if (btnArticles) btnArticles.onclick = () => switchTab('articles');
+    if (btnVocab) btnVocab.onclick = () => switchTab('vocab');
+    if (btnQuiz) btnQuiz.onclick = () => switchTab('quiz');
+
+    switchTab('articles'); // Ensure preselected state is handled
 
     // 2. Initial Load (Default IN)
     loadAllData();
@@ -80,7 +89,8 @@ function switchRegion(reg) {
 function switchTab(view) {
     state.view = view;
     document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
-    document.getElementById(`tab-${view}`).classList.add('active');
+    const activeTab = document.getElementById(`tab-${view}`);
+    if (activeTab) activeTab.classList.add('active');
     renderCurrentView();
 }
 
@@ -88,17 +98,26 @@ async function loadAllData() {
     toggleLoader(true);
     try {
         const suffix = state.suffix;
+        const apiRequests = [
+            fetch(`${BASE_URL}/WordOfTheDay${suffix}/${state.dateStrings.monthly}.json`).then(r => r.ok ? r.json() : null),
+            fetch(`${BASE_URL}/${suffix}Word/${state.dateStrings.daily}.json`).then(r => r.ok ? r.json() : null),
+            fetch(`${BASE_URL}/DayOfTheQuiz${suffix}/${state.dateStrings.daily}.json`).then(r => r.ok ? r.json() : null),
+            fetch(`${BASE_URL}/articles_${state.region.toLowerCase()}.json`).then(r => r.ok ? r.json() : null)
+        ];
+
         const [wodRes, vocabRes, quizRes, artRes] = await Promise.allSettled([
-            fetch(`${BASE_URL}/WordOfTheDay${suffix}/${state.dateStrings.monthly}.json`).then(r => r.json()),
-            fetch(`${BASE_URL}/${suffix}Word/${state.dateStrings.daily}.json`).then(r => r.json()),
-            fetch(`${BASE_URL}/DayOfTheQuiz${suffix}/${state.dateStrings.daily}.json`).then(r => r.json()),
-            fetch(`${BASE_URL}/articles_${state.region.toLowerCase()}.json`).then(r => r.json())
+            ...apiRequests
         ]);
 
-        state.data.wordOfDay = wodRes.status === 'fulfilled' ? wodRes.value.find(i => i.date.includes(state.dateStrings.searchDate)) : null;
-        state.data.vocab = vocabRes.status === 'fulfilled' ? vocabRes.value.wordMeaning : [];
-        state.data.quiz = quizRes.status === 'fulfilled' ? quizRes.value.questions : [];
-        state.data.articles = artRes.status === 'fulfilled' ? artRes.value : [];
+        // Word of the Day is usually a flat array
+        state.data.wordOfDay = (wodRes.status === 'fulfilled' && wodRes.value) ? wodRes.value.find(i => i.date.includes(state.dateStrings.searchDate)) : null;
+        
+        // Other features often have wrapper keys
+        state.data.vocab = (vocabRes.status === 'fulfilled' && vocabRes.value) ? (vocabRes.value.wordMeaning || []) : [];
+        state.data.quiz = (quizRes.status === 'fulfilled' && quizRes.value) ? (quizRes.value.questions || []) : [];
+        
+        // Articles might be wrapped in { "articles": [...] }
+        state.data.articles = (artRes.status === 'fulfilled' && artRes.value) ? (artRes.value.articles || artRes.value) : [];
 
         renderWordOfDay();
         renderCurrentView();
@@ -110,30 +129,45 @@ async function loadAllData() {
 
 function renderWordOfDay() {
     const container = document.getElementById('word-of-day-container');
+    if (!container) return;
+    
     const wod = state.data.wordOfDay;
-    if (!wod) { container.innerHTML = ''; return; }
+    if (!wod) { 
+        container.innerHTML = `<p style="padding:10px; font-size:0.8rem; color:gray;">Word of the Day not available for ${state.dateStrings.searchDate}</p>`; 
+        return; 
+    }
     
     const mKey = state.region === 'BD' ? 'bangla_meaning' : 'hindi_meaning';
     container.innerHTML = `
         <div class="word-of-day">
             <h3>Word of the Day</h3>
             <div class="word">${wod.word}</div>
-            <div class="phonetic">${wod.phonetic} <small>${wod.part_of_speech}</small></div>
-            <div class="meaning">${wod[mKey]}</div>
+            <div class="phonetic">${wod.phonetic || ''} <small>${wod.part_of_speech || ''}</small></div>
+            <div class="meaning">${wod[mKey] || ''}</div>
         </div>`;
 }
 
 function renderCurrentView() {
     const container = document.getElementById('main-content');
+    if (!container) return;
+    
     if (state.view === 'articles') {
+        if (!state.data.articles || state.data.articles.length === 0) {
+            container.innerHTML = '<p class="error-msg">No articles found for this region.</p>';
+            return;
+        }
         container.innerHTML = state.data.articles.map(a => `<div class="article-item"><h2>${a.title}</h2><p>${a.description}</p></div>`).join('');
     } else if (state.view === 'vocab') {
+        if (!state.data.vocab || state.data.vocab.length === 0) {
+            container.innerHTML = '<p class="error-msg">Daily vocabulary not found for today.</p>';
+            return;
+        }
         container.innerHTML = state.data.vocab.map(v => {
-            const [word, mean] = v.split(' : ');
-            return `<div class="vocab-item"><div class="vocab-word">${word}</div><div class="vocab-meaning">${mean}</div></div>`;
+            const parts = v.split(' : ');
+            return `<div class="vocab-item"><div class="vocab-word">${parts[0]}</div><div class="vocab-meaning">${parts[1] || ''}</div></div>`;
         }).join('');
     } else {
-        container.innerHTML = `<div class="quiz-container"><h3>Quiz</h3><p>${state.data.quiz.length} Questions available for today.</p></div>`;
+        container.innerHTML = `<div class="quiz-container"><h3>Daily Quiz</h3><p>${state.data.quiz ? state.data.quiz.length : 0} Questions available for today.</p></div>`;
     }
 }
 
