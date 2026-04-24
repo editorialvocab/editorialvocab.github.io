@@ -1,106 +1,134 @@
-const BASE_URL = "https://gitlab.com/Mahadi07/rtejhs/-/raw/main/EdData/data/";
+const BASE_URL = "https://gitlab.com/Mahadi07/rtejhs/-/raw/main/EdData/data";
 
 const state = {
-    region: 'IN', // Default
+    region: 'IN', // Default: Hindu User
+    suffix: 'EnToHn',
     view: 'articles',
-    data: {
-        wordOfDay: null,
-        vocab: [],
-        articles: [],
-        quiz: []
-    }
+    dateStrings: {},
+    data: { wordOfDay: null, vocab: [], articles: [], quiz: [] }
 };
 
+function setupDateStrings() {
+    const now = new Date();
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const year = now.getFullYear();
+    const monthName = now.toLocaleString('default', { month: 'long' });
+    
+    state.dateStrings = {
+        daily: `${day}-${month}-${year}`,
+        monthly: `${month}-${year}`,
+        searchDate: `${parseInt(day)} ${monthName} ${year}` // Matches "24 April 2026"
+    };
+}
+
 async function init() {
-    await detectLocation();
-    setupTabs();
+    setupDateStrings();
+    
+    // 1. Setup UI Listeners
+    const picker = document.getElementById('region-picker');
+    picker.onchange = (e) => switchRegion(e.target.value);
+    
+    document.getElementById('tab-articles').onclick = () => switchTab('articles');
+    document.getElementById('tab-vocab').onclick = () => switchTab('vocab');
+    document.getElementById('tab-quiz').onclick = () => switchTab('quiz');
+
+    // 2. Initial Load (Default IN)
     loadAllData();
+
+    // 3. Try Auto-Detection (Fail-safe)
+    detectLocation();
 }
 
 async function detectLocation() {
+    const statusEl = document.getElementById('region-status');
     try {
-        const res = await fetch('https://ipapi.co/json/');
+        // 2 second timeout for location check
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 2000);
+        
+        const res = await fetch('https://ipapi.co/json/', { signal: controller.signal });
         const info = await res.json();
-        state.region = info.country_code === 'BD' ? 'BD' : 'IN';
-        document.getElementById('region-status').innerText = `Source: ${state.region === 'BD' ? 'Daily Star' : 'The Hindu'}`;
+        clearTimeout(timeoutId);
+
+        if (info.country_code === 'BD' && state.region !== 'BD') {
+            document.getElementById('region-picker').value = 'BD';
+            switchRegion('BD');
+            statusEl.innerText = "Auto-detected: Bangladesh";
+        } else {
+            statusEl.innerText = `Region: ${state.region === 'BD' ? 'Bangladesh' : 'India'}`;
+        }
     } catch (e) {
-        console.log("Location fallback to IN");
+        statusEl.innerText = "Location: Manual Selection";
     }
+}
+
+function switchRegion(reg) {
+    state.region = reg;
+    state.suffix = reg === 'BD' ? 'EnToBn' : 'EnToHn';
+    loadAllData();
+}
+
+function switchTab(view) {
+    state.view = view;
+    document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
+    document.getElementById(`tab-${view}`).classList.add('active');
+    renderCurrentView();
 }
 
 async function loadAllData() {
     toggleLoader(true);
     try {
-        // Fetch common data
-        const [wod, vocab, quiz, articles] = await Promise.all([
-            fetchJSON('word_of_day.json'),
-            fetchJSON('daily_vocab.json'),
-            fetchJSON('quiz.json'),
-            fetchJSON(`articles_${state.region.toLowerCase()}.json`)
+        const suffix = state.suffix;
+        const [wodRes, vocabRes, quizRes, artRes] = await Promise.allSettled([
+            fetch(`${BASE_URL}/WordOfTheDay${suffix}/${state.dateStrings.monthly}.json`).then(r => r.json()),
+            fetch(`${BASE_URL}/${suffix}Word/${state.dateStrings.daily}.json`).then(r => r.json()),
+            fetch(`${BASE_URL}/DayOfTheQuiz${suffix}/${state.dateStrings.daily}.json`).then(r => r.json()),
+            fetch(`${BASE_URL}/articles_${state.region.toLowerCase()}.json`).then(r => r.json())
         ]);
 
-        state.data = { wordOfDay: wod, vocab, quiz, articles };
+        state.data.wordOfDay = wodRes.status === 'fulfilled' ? wodRes.value.find(i => i.date.includes(state.dateStrings.searchDate)) : null;
+        state.data.vocab = vocabRes.status === 'fulfilled' ? vocabRes.value.wordMeaning : [];
+        state.data.quiz = quizRes.status === 'fulfilled' ? quizRes.value.questions : [];
+        state.data.articles = artRes.status === 'fulfilled' ? artRes.value : [];
+
         renderWordOfDay();
         renderCurrentView();
     } catch (err) {
-        document.getElementById('main-content').innerHTML = `<div class="error-msg">Error loading JSON data from GitLab.</div>`;
+        console.error("Data load error", err);
     }
     toggleLoader(false);
 }
 
-async function fetchJSON(fileName) {
-    const response = await fetch(`${BASE_URL}${fileName}`);
-    return await response.json();
-}
-
 function renderWordOfDay() {
     const container = document.getElementById('word-of-day-container');
-    if (!state.data.wordOfDay) return;
+    const wod = state.data.wordOfDay;
+    if (!wod) { container.innerHTML = ''; return; }
+    
+    const mKey = state.region === 'BD' ? 'bangla_meaning' : 'hindi_meaning';
     container.innerHTML = `
         <div class="word-of-day">
             <h3>Word of the Day</h3>
-            <div class="word">${state.data.wordOfDay.word}</div>
-            <div class="meaning">${state.data.wordOfDay.meaning}</div>
-        </div>
-    `;
+            <div class="word">${wod.word}</div>
+            <div class="phonetic">${wod.phonetic} <small>${wod.part_of_speech}</small></div>
+            <div class="meaning">${wod[mKey]}</div>
+        </div>`;
 }
 
 function renderCurrentView() {
     const container = document.getElementById('main-content');
-    let html = '';
-
     if (state.view === 'articles') {
-        html = state.data.articles.map(art => `
-            <div class="article-item">
-                <h2>${art.title}</h2>
-                <p>${art.description}</p>
-            </div>
-        `).join('');
+        container.innerHTML = state.data.articles.map(a => `<div class="article-item"><h2>${a.title}</h2><p>${a.description}</p></div>`).join('');
     } else if (state.view === 'vocab') {
-        html = state.data.vocab.map(v => `
-            <div class="vocab-item">
-                <div class="vocab-word">${v.word}</div>
-                <div class="vocab-meaning">${v.meaning}</div>
-            </div>
-        `).join('');
-    } else if (state.view === 'quiz') {
-        html = `<div class="quiz-container"><h3>Quiz feature coming soon!</h3><p>Practice the 10 daily words here.</p></div>`;
+        container.innerHTML = state.data.vocab.map(v => {
+            const [word, mean] = v.split(' : ');
+            return `<div class="vocab-item"><div class="vocab-word">${word}</div><div class="vocab-meaning">${mean}</div></div>`;
+        }).join('');
+    } else {
+        container.innerHTML = `<div class="quiz-container"><h3>Quiz</h3><p>${state.data.quiz.length} Questions available for today.</p></div>`;
     }
-
-    container.innerHTML = html || '<p>No data available.</p>';
 }
 
-function setupTabs() {
-    const tabs = { 'tab-articles': 'articles', 'tab-vocab': 'vocab', 'tab-quiz': 'quiz' };
-    Object.keys(tabs).forEach(id => {
-        document.getElementById(id).onclick = (e) => {
-            document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
-            e.target.classList.add('active');
-            state.view = tabs[id];
-            renderCurrentView();
-        };
-    });
-}
+function toggleLoader(s) { document.getElementById('loader').style.display = s ? 'block' : 'none'; }
 
-function toggleLoader(show) { document.getElementById('loader').style.display = show ? 'block' : 'none'; }
-init();
+window.onload = init;

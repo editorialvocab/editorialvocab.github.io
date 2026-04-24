@@ -5,17 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editorial Vocabulary</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
     <nav class="app-bar">
         <div class="container">
             <h1>Editorial Vocabulary</h1>
-            <div id="region-status" class="region-info">Detecting location...</div>
+            <select id="region-picker" class="region-selector">
+                <option value="IN">Hindi User</option>
+                <option value="BD">BD User</option>
+            </select>
         </div>
     </nav>
 
     <main class="container">
-        <!-- Word of the Day Section -->
+        <div id="region-status" style="font-size: 0.7rem; text-align: right; padding: 5px; color: var(--text-secondary);">
+            Detecting location...
+        </div>
+
         <div id="word-of-day-container"></div>
 
         <div class="tabs">
@@ -26,10 +33,7 @@
 
         <div id="loader" class="loader" style="display: none;">Fetching latest data...</div>
         
-        <!-- Dynamic Content Area -->
-        <div id="main-content" class="content-card">
-            <!-- JSON data will be rendered here -->
-        </div>
+        <div id="main-content" class="content-card"></div>
     </main>
 
     <footer class="bottom-nav">

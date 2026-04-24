@@ -31,8 +31,26 @@ body {
     z-index: 100;
 }
 
-.app-bar h1 { margin: 0; font-size: 1.25rem; font-weight: 500; }
-.region-info { font-size: 0.75rem; opacity: 0.85; margin-top: 4px; }
+.app-bar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.app-bar h1 { margin: 0; font-size: 1.1rem; font-weight: 500; flex: 1; }
+
+.region-selector {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 0.8rem;
+    outline: none;
+    cursor: pointer;
+}
+
+.region-selector option { color: #333; }
 
 .tabs {
     display: flex;
