@@ -9,7 +9,15 @@ const state = {
 };
 
 function setupDateStrings() {
-    const now = new Date();
+    let now = new Date();
+
+    // If current time is before 8:30 AM, use yesterday's data
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    if (hours < 8 || (hours === 8 && minutes < 30)) {
+        now.setDate(now.getDate() - 1);
+    }
+
     const day = String(now.getDate()).padStart(2, '0');
     const month = String(now.getMonth() + 1).padStart(2, '0');
     const year = now.getFullYear();
@@ -18,7 +26,7 @@ function setupDateStrings() {
     state.dateStrings = {
         daily: `${day}-${month}-${year}`,
         monthly: `${month}-${year}`,
-        searchDate: `${parseInt(day)} ${monthName} ${year}` // Matches "24 April 2026"
+        searchDate: `${day} ${monthName} ${year}` // Matches "01 April 2026" or "24 April 2026"
     };
 }
 
