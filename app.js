@@ -4,7 +4,8 @@
    Features: WOD · Vocabulary · Articles · Full Interactive Quiz
    ═══════════════════════════════════════════════════════════════ */
 
-const BASE = "https://gitlab.com/Mahadi07/rtejhs/-/raw/main/EdData/data";
+// Use gl.githack.com to serve GitLab files with proper CORS headers
+const BASE = "https://gl.githack.com/Mahadi07/rtejhs/raw/main/EdData/data";
 
 // ── App State ────────────────────────────────────────────────────
 const state = {
@@ -78,7 +79,8 @@ async function detectRegion() {
     try {
         const ctrl = new AbortController();
         setTimeout(() => ctrl.abort(), 2500);
-        const r    = await fetch("https://ipapi.co/json/", { signal: ctrl.signal });
+        // ipapi.co often blocks browser requests; ipwho.is is a more reliable CORS-friendly alternative
+        const r    = await fetch("https://ipwho.is/", { signal: ctrl.signal });
         const info = await r.json();
         if (info?.country_code === "BD") {
             setRegion("BD");
