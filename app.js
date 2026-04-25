@@ -48,15 +48,20 @@ function buildDates() {
         month:      mm,
         searchDate: `${Number(dd)} ${monthNames[now.getMonth()]} ${yyyy}`, // "25 April 2026"
     };
+    console.log("Generated dates:", state.dates);
 }
 
 // ── Fetch helper ──────────────────────────────────────────────────
 async function fetchJSON(url) {
     try {
         const r = await fetch(url, { cache: "no-store" });
-        if (!r.ok) return null;
-        return await r.json();
-    } catch { return null; }
+        if (!r.ok) {
+            console.error(`Fetch failed for ${url}: HTTP status ${r.status}`);
+            return null;
+        }
+        const data = await r.json();
+        return data;
+    } catch (e) { console.error(`Error fetching ${url}:`, e); return null; }
 }
 
 // ── Init ──────────────────────────────────────────────────────────
@@ -98,6 +103,16 @@ async function loadAll() {
     const { daily, monthly, year, month, searchDate } = state.dates;
     const sf     = state.suffix;
     const folder = state.region === "IN" ? "india" : "bangladesh";
+
+    // Log the URLs being constructed
+    const wodUrl      = `${BASE}/WordOfTheDay${sf}/${monthly}.json`;
+    const vocabUrl    = `${BASE}/${sf}Word/${daily}.json`;
+    const quizUrl     = `${BASE}/DayOfTheQuiz${sf}/${daily}.json`;
+    const articlesUrl = `${BASE}/articles/${folder}/${year}/${month}/${daily}.json`;
+    console.log("Fetching WOD from:", wodUrl);
+    console.log("Fetching Vocab from:", vocabUrl);
+    console.log("Fetching Quiz from:", quizUrl);
+    console.log("Fetching Articles from:", articlesUrl);
 
     const [wodData, vocabData, quizData, artData] = await Promise.all([
         fetchJSON(`${BASE}/WordOfTheDay${sf}/${monthly}.json`),
