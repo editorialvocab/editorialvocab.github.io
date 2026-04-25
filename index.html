@@ -2,43 +2,143 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editorial Vocabulary</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Editorial Vocabulary — Master English for Competitive Exams</title>
+    <meta name="description" content="Daily vocabulary from The Hindu & Daily Star editorials. Perfect for UPSC, SSC, BCS, PSC exam preparation.">
+    <meta name="theme-color" content="#0a0f1e">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Editorial Vocabulary App">
+    <meta property="og:description" content="Master newspaper editorials. Daily vocab, quiz, articles — FREE.">
+    <meta property="og:image" content="https://raw.githubusercontent.com/promahadihasan/promahadihasan/main/files/dailyEditorial.svg">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
-    <nav class="app-bar">
-        <div class="container">
-            <h1>Editorial Vocabulary</h1>
-            <select id="region-picker" class="region-selector">
-                <option value="IN">Hindi User</option>
-                <option value="BD">BD User</option>
-            </select>
+
+    <!-- ── TOP NAV ──────────────────────────────────────────────────────── -->
+    <header class="top-nav">
+        <div class="nav-inner">
+            <div class="nav-brand">
+                <span class="brand-icon">📖</span>
+                <span class="brand-name">Editorial <span class="brand-accent">Vocab</span></span>
+            </div>
+            <div class="nav-right">
+                <div class="region-wrap">
+                    <span class="region-label" id="region-status">Detecting…</span>
+                    <select id="region-picker" class="region-select" aria-label="Select region">
+                        <option value="IN">🇮🇳 India</option>
+                        <option value="BD">🇧🇩 Bangladesh</option>
+                    </select>
+                </div>
+                <a class="nav-cta" href="https://play.google.com/store/apps/details?id=megaminds.dailyeditorialword" target="_blank" rel="noopener">
+                    ↓ App
+                </a>
+            </div>
         </div>
-    </nav>
+    </header>
 
-    <main class="container">
-        <div id="region-status" style="font-size: 0.7rem; text-align: right; padding: 5px; color: var(--text-secondary);">
-            Detecting location...
-        </div>
+    <main>
 
-        <div id="word-of-day-container"></div>
+        <!-- ── HERO WORD OF THE DAY ──────────────────────────────────────── -->
+        <section class="wod-section">
+            <div class="wod-eyebrow">Word of the Day</div>
+            <div id="wod-card" class="wod-card">
+                <div class="wod-skeleton">
+                    <div class="skel skel-title"></div>
+                    <div class="skel skel-sub"></div>
+                    <div class="skel skel-body"></div>
+                    <div class="skel skel-body short"></div>
+                </div>
+            </div>
+        </section>
 
-        <div class="tabs">
-            <button id="tab-articles" class="active">Articles</button>
-            <button id="tab-vocab">10 Daily Vocab</button>
-            <button id="tab-quiz">Quiz</button>
-        </div>
+        <!-- ── TABS ──────────────────────────────────────────────────────── -->
+        <section class="tabs-section">
+            <div class="tabs-bar">
+                <button class="tab-btn active" data-tab="vocab">
+                    <span class="tab-icon">📚</span>
+                    <span>10 Daily Words</span>
+                </button>
+                <button class="tab-btn" data-tab="articles">
+                    <span class="tab-icon">📰</span>
+                    <span>Articles</span>
+                </button>
+                <button class="tab-btn" data-tab="quiz">
+                    <span class="tab-icon">✏️</span>
+                    <span>Quiz</span>
+                </button>
+            </div>
 
-        <div id="loader" class="loader" style="display: none;">Fetching latest data...</div>
-        
-        <div id="main-content" class="content-card"></div>
+            <!-- loader -->
+            <div id="loader" class="loader" aria-live="polite">
+                <div class="loader-dots"><span></span><span></span><span></span></div>
+                <p>Fetching today's content…</p>
+            </div>
+
+            <!-- tab panels -->
+            <div id="panel-vocab"    class="tab-panel active"></div>
+            <div id="panel-articles" class="tab-panel"></div>
+            <div id="panel-quiz"     class="tab-panel"></div>
+        </section>
+
+        <!-- ── DOWNLOAD BANNER ───────────────────────────────────────────── -->
+        <section class="download-banner">
+            <div class="download-inner">
+                <div class="download-text">
+                    <div class="download-eyebrow">Free Android App</div>
+                    <h2 class="download-title">Learn on the go.<br>Never miss a word.</h2>
+                    <p class="download-desc">XP system · Daily missions · Streak tracking · Leaderboard</p>
+                </div>
+                <a class="download-btn" href="https://play.google.com/store/apps/details?id=megaminds.dailyeditorialword" target="_blank" rel="noopener">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Get it on Google Play" width="180">
+                </a>
+            </div>
+        </section>
+
     </main>
 
-    <footer class="bottom-nav">
-        <a href="about.html">About Developer</a>
+    <!-- ── FOOTER ─────────────────────────────────────────────────────────── -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="brand-name">Editorial <span class="brand-accent">Vocab</span></span>
+                <p class="footer-tagline">"Don't just read editorials — master them."</p>
+            </div>
+            <div class="footer-links">
+                <div class="footer-col">
+                    <h4>Developer</h4>
+                    <a href="https://promahadihasan.github.io/" target="_blank">Mahadi Hasan</a>
+                    <a href="https://promahadihasan.github.io/profile/" target="_blank">About Me</a>
+                    <a href="https://linkedin.com/in/promahadihasan" target="_blank">LinkedIn</a>
+                    <a href="https://github.com/promahadihasan" target="_blank">GitHub</a>
+                </div>
+                <div class="footer-col">
+                    <h4>App</h4>
+                    <a href="https://play.google.com/store/apps/details?id=megaminds.dailyeditorialword" target="_blank">Google Play</a>
+                    <a href="https://promahadihasan.github.io/privacy-policy/" target="_blank">Privacy Policy</a>
+                    <a href="https://promahadihasan.github.io/terms-conditions/" target="_blank">Terms</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Social</h4>
+                    <a href="https://www.facebook.com/editorialvocabapp" target="_blank">Facebook</a>
+                    <a href="https://www.youtube.com/@editorialvocabapp" target="_blank">YouTube</a>
+                    <a href="https://www.instagram.com/editorialvocabapp" target="_blank">Instagram</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024–2026 Mahadi Hasan · Tangail, Bangladesh · <a href="mailto:mahadi129727@gmail.com">mahadi129727@gmail.com</a></p>
+        </div>
     </footer>
+
+    <!-- back to top -->
+    <button id="back-top" aria-label="Back to top" title="Back to top">↑</button>
 
     <script src="js/app.js"></script>
 </body>

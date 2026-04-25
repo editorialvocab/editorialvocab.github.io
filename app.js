@@ -1,189 +1,444 @@
-const BASE_URL = "https://gitlab.com/Mahadi07/rtejhs/-/raw/main/EdData/data";
+/* ═══════════════════════════════════════════════════════════════
+   Editorial Vocabulary Web App — app.js
+   Fetches live data from GitLab public repo.
+   Features: WOD · Vocabulary · Articles · Full Interactive Quiz
+   ═══════════════════════════════════════════════════════════════ */
 
+const BASE = "https://gitlab.com/Mahadi07/rtejhs/-/raw/main/EdData/data";
+
+// ── App State ────────────────────────────────────────────────────
 const state = {
-    region: 'IN', // Default: Hindu User
-    suffix: 'EnToHn',
-    view: 'wod',
-    dateStrings: {},
-    data: { wordOfDay: null, vocab: [], articles: [], quiz: [] }
+    region: "IN",           // "IN" = India (Hindi), "BD" = Bangladesh (Bengali)
+    suffix: "EnToHn",
+    activeTab: "vocab",
+    dates: {},
+
+    // fetched data
+    wod:      null,
+    vocab:    [],
+    articles: [],
+    quiz:     [],
+
+    // quiz engine
+    quizState: {
+        current:   0,
+        answers:   {},         // { index: selectedOption }
+        submitted: {},         // { index: true } once answered
+        score:     0,
+        done:      false,
+    },
 };
 
-function setupDateStrings() {
+// ── Date helpers ──────────────────────────────────────────────────
+function buildDates() {
     const now = new Date();
-
-    // If current time is before 8:30 AM, use yesterday's data
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
-    if (hours < 8 || (hours === 8 && minutes < 30)) {
+    // If before 8:30 AM, use yesterday's data (pipeline runs at noon)
+    if (now.getHours() < 8 || (now.getHours() === 8 && now.getMinutes() < 30)) {
         now.setDate(now.getDate() - 1);
-    } else {
-        // Ensure we are working with today if it's after 8:30
     }
-
-    const day = String(now.getDate()).padStart(2, '0');
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const year = now.getFullYear();
-    const monthName = now.toLocaleString('default', { month: 'long' });
-    
-    state.dateStrings = {
-        daily: `${day}-${month}-${year}`,
-        monthly: `${month}-${year}`,
-        year: year,
-        month: month,
-        searchDate: `${day} ${monthName} ${year}` 
+    const dd    = String(now.getDate()).padStart(2, "0");
+    const mm    = String(now.getMonth() + 1).padStart(2, "0");
+    const yyyy  = now.getFullYear();
+    const monthNames = ["January","February","March","April","May","June",
+                        "July","August","September","October","November","December"];
+    state.dates = {
+        daily:      `${dd}-${mm}-${yyyy}`,     // 25-04-2026
+        monthly:    `${mm}-${yyyy}`,            // 04-2026
+        year:       yyyy,
+        month:      mm,
+        searchDate: `${Number(dd)} ${monthNames[now.getMonth()]} ${yyyy}`, // "25 April 2026"
     };
 }
 
+// ── Fetch helper ──────────────────────────────────────────────────
+async function fetchJSON(url) {
+    try {
+        const r = await fetch(url, { cache: "no-store" });
+        if (!r.ok) return null;
+        return await r.json();
+    } catch { return null; }
+}
+
+// ── Init ──────────────────────────────────────────────────────────
 async function init() {
-    console.log("App initializing...");
-    setupDateStrings();
-    
-    // 1. Setup UI Listeners
-    const picker = document.getElementById('region-picker');
-    if (picker) picker.onchange = (e) => switchRegion(e.target.value);
-    
-    const btnWod = document.getElementById('tab-wod');
-    const btnArticles = document.getElementById('tab-articles');
-    const btnVocab = document.getElementById('tab-vocab');
-    const btnQuiz = document.getElementById('tab-quiz');
-
-    if (btnWod) btnWod.onclick = () => switchTab('wod');
-    if (btnArticles) btnArticles.onclick = () => switchTab('articles');
-    if (btnVocab) btnVocab.onclick = () => switchTab('vocab');
-    if (btnQuiz) btnQuiz.onclick = () => switchTab('quiz');
-
-    switchTab('wod'); // Preselect Word of the Day
-
-    // 2. Initial Load (Default IN)
-    loadAllData();
-
-    // 3. Try Auto-Detection (Fail-safe)
-    detectLocation();
+    buildDates();
+    bindUI();
+    await detectRegion();       // auto-detect first (fast)
+    await loadAll();
 }
 
-async function detectLocation() {
-    const statusEl = document.getElementById('region-status');
+// ── Region detection ──────────────────────────────────────────────
+async function detectRegion() {
+    const statusEl = document.getElementById("region-status");
     try {
-        // 2 second timeout for location check
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 2000);
-        
-        const res = await fetch('https://ipapi.co/json/', { signal: controller.signal });
-        const info = await res.json();
-        clearTimeout(timeoutId);
-
-        if (info.country_code === 'BD' && state.region !== 'BD') {
-            document.getElementById('region-picker').value = 'BD';
-            switchRegion('BD');
-            statusEl.innerText = "Auto-detected: Bangladesh";
+        const ctrl = new AbortController();
+        setTimeout(() => ctrl.abort(), 2500);
+        const r    = await fetch("https://ipapi.co/json/", { signal: ctrl.signal });
+        const info = await r.json();
+        if (info?.country_code === "BD") {
+            setRegion("BD");
+            document.getElementById("region-picker").value = "BD";
         } else {
-            statusEl.innerText = `Region: ${state.region === 'BD' ? 'Bangladesh' : 'India'}`;
+            setRegion("IN");
         }
-    } catch (e) {
-        statusEl.innerText = "Location: Manual Selection";
+        statusEl.textContent = state.region === "BD" ? "🇧🇩 Bangladesh" : "🇮🇳 India";
+    } catch {
+        statusEl.textContent = state.region === "BD" ? "🇧🇩 Bangladesh" : "🇮🇳 India";
     }
 }
 
-function switchRegion(reg) {
+function setRegion(reg) {
     state.region = reg;
-    state.suffix = reg === 'BD' ? 'EnToBn' : 'EnToHn';
-    loadAllData();
+    state.suffix = reg === "BD" ? "EnToBn" : "EnToHn";
 }
 
-function switchTab(view) {
-    state.view = view;
-    document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
-    const activeTab = document.getElementById(`tab-${view}`);
-    if (activeTab) activeTab.classList.add('active');
-    renderCurrentView();
-}
+// ── Load all data ─────────────────────────────────────────────────
+async function loadAll() {
+    showLoader(true);
+    const { daily, monthly, year, month, searchDate } = state.dates;
+    const sf     = state.suffix;
+    const folder = state.region === "IN" ? "india" : "bangladesh";
 
-async function loadAllData() {
-    toggleLoader(true);
-    try {
-        const suffix = state.suffix;
-        const { daily, monthly, year, month } = state.dateStrings;
-        const regionFolder = state.region === 'IN' ? 'india' : 'bangladesh';
+    const [wodData, vocabData, quizData, artData] = await Promise.all([
+        fetchJSON(`${BASE}/WordOfTheDay${sf}/${monthly}.json`),
+        fetchJSON(`${BASE}/${sf}Word/${daily}.json`),
+        fetchJSON(`${BASE}/DayOfTheQuiz${sf}/${daily}.json`),
+        fetchJSON(`${BASE}/articles/${folder}/${year}/${month}/${daily}.json`),
+    ]);
 
-        // New Article Path: EdData/data/articles/india/2026/04/03-04-2026.json
-        const articlePath = `${BASE_URL}/articles/${regionFolder}/${year}/${month}/${daily}.json`;
-
-        const apiRequests = [
-            fetch(`${BASE_URL}/WordOfTheDay${suffix}/${monthly}.json`).then(r => r.ok ? r.json() : null),
-            fetch(`${BASE_URL}/${suffix}Word/${daily}.json`).then(r => r.ok ? r.json() : null),
-            fetch(`${BASE_URL}/DayOfTheQuiz${suffix}/${daily}.json`).then(r => r.ok ? r.json() : null),
-            fetch(articlePath).then(r => r.ok ? r.json() : null)
-        ];
-
-        const [wodRes, vocabRes, quizRes, artRes] = await Promise.allSettled([
-            ...apiRequests
-        ]);
-
-        state.data.wordOfDay = (wodRes.status === 'fulfilled' && wodRes.value) ? wodRes.value.find(i => i.date.includes(state.dateStrings.searchDate)) : null;
-        
-        state.data.vocab = (vocabRes.status === 'fulfilled' && vocabRes.value) ? (vocabRes.value.wordMeaning || []) : [];
-        state.data.quiz = (quizRes.status === 'fulfilled' && quizRes.value) ? (quizRes.value.questions || []) : [];
-        
-        state.data.articles = (artRes.status === 'fulfilled' && artRes.value) ? (artRes.value.articles || []) : [];
-
-        renderCurrentView();
-    } catch (err) {
-        console.error("Data load error", err);
-    }
-    toggleLoader(false);
-}
-
-function renderCurrentView() {
-    const container = document.getElementById('main-content');
-    if (!container) return;
-    
-    if (state.view === 'wod') {
-        const wod = state.data.wordOfDay;
-        if (!wod) {
-            container.innerHTML = `<p class="error-msg">Word of the Day not available for ${state.dateStrings.searchDate}</p>`;
-            return;
-        }
-        const mKey = state.region === 'BD' ? 'bangla_meaning' : 'hindi_meaning';
-        container.innerHTML = `
-            <div class="word-of-day-detail">
-                <h2 style="color:var(--primary-color)">${wod.word}</h2>
-                <p><i>${wod.phonetic || ''} - ${wod.part_of_speech || ''}</i></p>
-                <h3 style="margin-top:20px">${wod[mKey] || ''}</h3>
-                <hr>
-                <p><b>Definition:</b> ${wod.definition || ''}</p>
-                <p><b>Example:</b> ${wod.example || ''}</p>
-            </div>`;
-    } else if (state.view === 'articles') {
-        const articles = state.data.articles;
-        if (!articles || articles.length === 0) {
-            container.innerHTML = `<p class="error-msg">No articles found for ${state.dateStrings.daily}. Path checked: articles/${state.region === 'IN' ? 'india' : 'bangladesh'}/${state.dateStrings.year}/${state.dateStrings.month}/</p>`;
-            return;
-        }
-        container.innerHTML = articles.map(a => `
-            <div class="article-item" style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 15px;">
-                <small style="color: var(--primary-color); font-weight: bold;">${a.news_paper_name}</small>
-                <h2 style="margin: 5px 0; font-size: 1.1rem;">${a.headline_1}</h2>
-                <h3 style="margin: 5px 0; font-size: 0.95rem; color: #555; font-weight: normal;">${a.headline_2}</h3>
-                <p style="font-size: 0.9rem; color: #666; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
-                    ${a.full_article}
-                </p>
-                <a href="${a.link}" target="_blank" style="font-size: 0.8rem; color: var(--primary-color); text-decoration: none;">Read Full Article →</a>
-            </div>
-        `).join('');
-    } else if (state.view === 'vocab') {
-        if (!state.data.vocab || state.data.vocab.length === 0) {
-            container.innerHTML = '<p class="error-msg">Daily vocabulary not found for today.</p>';
-            return;
-        }
-        container.innerHTML = state.data.vocab.map(v => {
-            const parts = v.split(' : ');
-            return `<div class="vocab-item"><div class="vocab-word">${parts[0]}</div><div class="vocab-meaning">${parts[1] || ''}</div></div>`;
-        }).join('');
+    // WOD: find today's entry by date string
+    if (Array.isArray(wodData)) {
+        state.wod = wodData.find(w => w.date && w.date.includes(searchDate)) || null;
     } else {
-        container.innerHTML = `<div class="quiz-container"><h3>Daily Quiz</h3><p>${state.data.quiz ? state.data.quiz.length : 0} Questions available for today.</p></div>`;
+        state.wod = null;
+    }
+
+    state.vocab    = Array.isArray(vocabData?.wordMeaning)  ? vocabData.wordMeaning  : [];
+    state.quiz     = Array.isArray(quizData?.questions)     ? quizData.questions     : [];
+    state.articles = Array.isArray(artData?.articles)       ? artData.articles       : [];
+
+    // Reset quiz engine on region/date change
+    resetQuizState();
+
+    showLoader(false);
+    renderWOD();
+    renderActiveTab();
+}
+
+// ── Bind UI ───────────────────────────────────────────────────────
+function bindUI() {
+    // Region picker
+    document.getElementById("region-picker").onchange = e => {
+        setRegion(e.target.value);
+        document.getElementById("region-status").textContent =
+            state.region === "BD" ? "🇧🇩 Bangladesh" : "🇮🇳 India";
+        loadAll();
+    };
+
+    // Tabs
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+        btn.onclick = () => switchTab(btn.dataset.tab);
+    });
+
+    // Back to top
+    const backTop = document.getElementById("back-top");
+    window.addEventListener("scroll", () => {
+        backTop.classList.toggle("visible", window.scrollY > 300);
+    }, { passive: true });
+    backTop.onclick = () => window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function switchTab(tab) {
+    state.activeTab = tab;
+    document.querySelectorAll(".tab-btn").forEach(b =>
+        b.classList.toggle("active", b.dataset.tab === tab));
+    document.querySelectorAll(".tab-panel").forEach(p =>
+        p.classList.toggle("active", p.id === `panel-${tab}`));
+    renderActiveTab();
+}
+
+function renderActiveTab() {
+    switch (state.activeTab) {
+        case "vocab":    renderVocab();    break;
+        case "articles": renderArticles(); break;
+        case "quiz":     renderQuiz();     break;
     }
 }
 
-function toggleLoader(s) { document.getElementById('loader').style.display = s ? 'block' : 'none'; }
+// ── Loader ────────────────────────────────────────────────────────
+function showLoader(on) {
+    document.getElementById("loader").style.display = on ? "block" : "none";
+}
 
-window.onload = init;
+// ═══════════════════════════════════════════════════════════════
+//  WORD OF THE DAY
+// ═══════════════════════════════════════════════════════════════
+function renderWOD() {
+    const el  = document.getElementById("wod-card");
+    const wod = state.wod;
+
+    if (!wod) {
+        el.innerHTML = `
+            <div class="wod-empty">
+                <p>Word of the Day not available for<br><strong>${state.dates.searchDate}</strong></p>
+                <p style="margin-top:8px;font-size:0.8rem;color:var(--text-mute)">
+                    Data updates daily at noon. Try again later.
+                </p>
+            </div>`;
+        return;
+    }
+
+    const mKey   = state.region === "BD" ? "bangla_meaning" : "hindi_meaning";
+    const native = esc(wod[mKey] || wod.hindi_meaning || wod.bangla_meaning || "");
+    const syns   = (wod.synonyms || []).slice(0, 5).map(s => `<span class="chip">${esc(s)}</span>`).join("");
+    const ants   = (wod.antonyms || []).slice(0, 5).map(a => `<span class="chip">${esc(a)}</span>`).join("");
+
+    el.innerHTML = `
+        ${wod.word ? `<div class="wod-word">${esc(wod.word)}</div>` : ""}
+        ${wod.phonetic ? `<div class="wod-phonetic">${esc(wod.phonetic)}</div>` : ""}
+        ${wod.part_of_speech ? `<div class="wod-pos">${esc(wod.part_of_speech)}</div>` : ""}
+        ${native ? `<div class="wod-native">${esc(native)}</div>` : ""}
+        <div class="wod-divider"></div>
+        ${wod.definition ? `
+            <div class="wod-field">
+                <div class="wod-label">Definition</div>
+                <div class="wod-value">${esc(wod.definition)}</div>
+            </div>` : ""}
+        ${wod.example ? `
+            <div class="wod-field">
+                <div class="wod-label">Example</div>
+                <div class="wod-value wod-example">"${esc(wod.example)}"</div>
+            </div>` : ""}
+        ${syns ? `
+            <div class="wod-field">
+                <div class="wod-label">Synonyms</div>
+                <div class="wod-chips">${syns}</div>
+            </div>` : ""}
+        ${ants ? `
+            <div class="wod-field">
+                <div class="wod-label">Antonyms</div>
+                <div class="wod-chips">${ants}</div>
+            </div>` : ""}
+        ${wod.audio_url ? `
+            <button class="wod-audio-btn" onclick="playAudio('${esc(wod.audio_url)}')">
+                🔊 Pronunciation
+            </button>` : ""}
+    `;
+}
+
+function playAudio(url) {
+    if (!url) return;
+    new Audio(url).play().catch(() => {});
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  VOCABULARY
+// ═══════════════════════════════════════════════════════════════
+function renderVocab() {
+    const el  = document.getElementById("panel-vocab");
+    const src = state.region === "BD" ? "The Daily Star" : "The Hindu";
+
+    if (!state.vocab.length) {
+        el.innerHTML = emptyState("📚", `No vocabulary found for ${state.dates.daily}.`);
+        return;
+    }
+
+    const items = state.vocab.map((entry, i) => {
+        const [word, meaning] = entry.split(" : ");
+        return `
+            <div class="vocab-item">
+                <div class="vocab-num">${String(i+1).padStart(2,"0")}</div>
+                <div class="vocab-body">
+                    <div class="vocab-word">${esc(word?.trim() || "")}</div>
+                    <div class="vocab-meaning">${esc(meaning?.trim() || "")}</div>
+                </div>
+            </div>`;
+    }).join("");
+
+    el.innerHTML = `
+        <div class="vocab-header">
+            Today's 10 Words — <em>${src}</em>
+        </div>
+        <div class="vocab-list">${items}</div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  ARTICLES
+// ═══════════════════════════════════════════════════════════════
+function renderArticles() {
+    const el = document.getElementById("panel-articles");
+
+    if (!state.articles.length) {
+        el.innerHTML = emptyState("📰",
+            `No articles found for ${state.dates.daily}.<br>
+             Articles are fetched from editorials scraped each day at noon.`);
+        return;
+    }
+
+    const cards = state.articles.map(a => `
+        <div class="article-card">
+            <div class="article-source">${esc(a.news_paper_name || "")}</div>
+            <div class="article-h1">${esc(a.headline_1 || "")}</div>
+            ${a.headline_2 ? `<div class="article-h2">${esc(a.headline_2)}</div>` : ""}
+            <p class="article-excerpt">${esc(a.full_article?.slice(0, 300) || "")}</p>
+            <a class="article-link" href="${esc(a.link || "#")}" target="_blank" rel="noopener">
+                Read full article →
+            </a>
+        </div>`).join("");
+
+    el.innerHTML = `<div class="articles-list">${cards}</div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  QUIZ ENGINE
+// ═══════════════════════════════════════════════════════════════
+function resetQuizState() {
+    state.quizState = {
+        current:   0,
+        answers:   {},
+        submitted: {},
+        score:     0,
+        done:      false,
+    };
+}
+
+function renderQuiz() {
+    const el  = document.getElementById("panel-quiz");
+    const qs  = state.quizState;
+    const all = state.quiz;
+
+    if (!all.length) {
+        el.innerHTML = emptyState("✏️", `No quiz available for ${state.dates.daily}.`);
+        return;
+    }
+
+    if (qs.done) {
+        renderQuizResult(el);
+        return;
+    }
+
+    const q         = all[qs.current];
+    const total     = all.length;
+    const progress  = ((qs.current) / total) * 100;
+    const answered  = qs.submitted[qs.current];
+
+    const options = q.options.map((opt, i) => {
+        let cls = "quiz-option";
+        if (answered) {
+            if (opt === q.answer) {
+                cls += qs.answers[qs.current] === opt ? " selected-correct" : " show-correct";
+            } else if (qs.answers[qs.current] === opt) {
+                cls += " selected-wrong";
+            }
+        }
+        const disabled = answered ? "disabled" : "";
+        return `<button class="${cls}" ${disabled}
+                    onclick="selectAnswer(${i}, \`${escAttr(opt)}\`)">
+                    ${esc(opt)}
+                </button>`;
+    }).join("");
+
+    el.innerHTML = `
+        <div class="quiz-header">
+            <div class="quiz-title">Daily Quiz</div>
+            <div class="quiz-score-badge">Score ${qs.score} / ${total}</div>
+        </div>
+        <div class="quiz-progress">
+            <div class="quiz-progress-bar" style="width:${progress}%"></div>
+        </div>
+        <div class="quiz-q-block">
+            <div class="quiz-q-num">Question ${qs.current + 1} of ${total}</div>
+            <div class="quiz-q-text">${esc(q.question || "")}</div>
+            <div class="quiz-options">${options}</div>
+            <div class="quiz-nav">
+                ${qs.current > 0
+                    ? `<button class="quiz-btn quiz-btn-secondary" onclick="quizPrev()">← Prev</button>`
+                    : `<span></span>`}
+                ${answered
+                    ? (qs.current < total - 1
+                        ? `<button class="quiz-btn quiz-btn-primary" onclick="quizNext()">Next →</button>`
+                        : `<button class="quiz-btn quiz-btn-primary" onclick="finishQuiz()">See Results 🎉</button>`)
+                    : `<span style="font-size:0.8rem;color:var(--text-mute)">Select an answer</span>`}
+            </div>
+        </div>`;
+}
+
+function selectAnswer(optionIndex, value) {
+    const qs = state.quizState;
+    const q  = state.quiz[qs.current];
+
+    if (qs.submitted[qs.current]) return; // already answered
+
+    qs.answers[qs.current]   = value;
+    qs.submitted[qs.current] = true;
+
+    if (value === q.answer) qs.score++;
+
+    renderQuiz();
+}
+
+function quizNext() {
+    if (state.quizState.current < state.quiz.length - 1) {
+        state.quizState.current++;
+        renderQuiz();
+    }
+}
+
+function quizPrev() {
+    if (state.quizState.current > 0) {
+        state.quizState.current--;
+        renderQuiz();
+    }
+}
+
+function finishQuiz() {
+    state.quizState.done = true;
+    renderQuiz();
+}
+
+function renderQuizResult(el) {
+    const { score } = state.quizState;
+    const total     = state.quiz.length;
+    const pct       = Math.round((score / total) * 100);
+
+    let emoji = "😟", grade = "Keep practising";
+    if (pct >= 90) { emoji = "🏆"; grade = "Excellent!";     }
+    else if (pct >= 70) { emoji = "🎯"; grade = "Well done!";    }
+    else if (pct >= 50) { emoji = "📚"; grade = "Good effort!";  }
+
+    el.innerHTML = `
+        <div class="quiz-result">
+            <div class="quiz-result-emoji">${emoji}</div>
+            <div class="quiz-result-title">${grade}</div>
+            <div class="quiz-result-score">${score}/${total}</div>
+            <div class="quiz-result-label">${pct}% accuracy · ${state.dates.daily}</div>
+            <button class="quiz-restart-btn" onclick="restartQuiz()">Try Again</button>
+        </div>`;
+}
+
+function restartQuiz() {
+    resetQuizState();
+    renderQuiz();
+}
+
+// ── Helpers ───────────────────────────────────────────────────────
+function esc(s) {
+    if (typeof s !== "string") return "";
+    return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+            .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+}
+
+function escAttr(s) {
+    if (typeof s !== "string") return "";
+    return s.replace(/`/g, "\\`").replace(/\$/g, "\\$");
+}
+
+function emptyState(icon, msg) {
+    return `<div class="empty-state">
+                <div class="empty-icon">${icon}</div>
+                <p>${msg}</p>
+            </div>`;
+}
+
+// ── Boot ──────────────────────────────────────────────────────────
+window.addEventListener("DOMContentLoaded", init);
