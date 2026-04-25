@@ -665,6 +665,20 @@ button { cursor: pointer; font-family: inherit; }
 .download-btn img { filter: brightness(0.95); transition: var(--transition); }
 .download-btn:hover img { filter: brightness(1.05); transform: scale(1.02); }
 
+.download-buttons-wrapper {
+    display: flex;
+    flex-direction: column; /* Stack children vertically */
+    align-items: center; /* Center them horizontally */
+    gap: 15px; /* Space between the two download buttons */
+}
+
+.app-icon-download-link img {
+    border-radius: var(--radius-md); /* Give it some rounded corners */
+    box-shadow: var(--shadow-card); /* Add a subtle shadow */
+    transition: transform 0.2s ease-in-out;
+}
+.app-icon-download-link:hover img { transform: scale(1.05); }
+
 /* ── Footer ──────────────────────────────────────────────────────── */
 .site-footer {
     background: var(--navy-2);

@@ -140,6 +140,7 @@ async function loadAll() {
     showLoader(false);
     renderWOD();
     renderActiveTab();
+    renderAppDownloadIcon(); // Call the new function here
 }
 
 // ── Bind UI ───────────────────────────────────────────────────────
@@ -185,6 +186,25 @@ function renderActiveTab() {
 // ── Loader ────────────────────────────────────────────────────────
 function showLoader(on) {
     document.getElementById("loader").style.display = on ? "block" : "none";
+}
+
+// ── Render App Download Icon ──────────────────────────────────────
+function renderAppDownloadIcon() {
+    const appIconLink = document.getElementById("app-icon-link");
+    const appIconImg  = document.getElementById("app-icon-img");
+
+    if (!appIconLink || !appIconImg) return; // Ensure elements exist
+
+    const appIconPath = state.region === "BD"
+        ? "image/appIcon/app_icon_dailyStar.PNG"
+        : "image/appIcon/app_icon_The_Hindu.PNG";
+
+    // The Play Store link is constant for this app
+    const playStoreLink = "https://play.google.com/store/apps/details?id=megaminds.dailyeditorialword";
+
+    appIconImg.src = appIconPath;
+    appIconLink.href = playStoreLink;
+    appIconLink.title = `Download on Google Play (${state.region === "BD" ? "Daily Star" : "The Hindu"} version)`;
 }
 
 // ═══════════════════════════════════════════════════════════════
