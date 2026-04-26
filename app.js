@@ -172,8 +172,11 @@ function initFeaturesCarousel() {
     const grid = document.getElementById("features-grid");
     const dotsContainer = document.getElementById("features-dots");
     const cards = grid.querySelectorAll(".feature-card");
+    const nextBtn = document.getElementById("features-next");
+    const prevBtn = document.getElementById("features-prev");
+    
     let currentIndex = 0;
-    let autoPlay;
+    const gap = 20; // Matches CSS gap
 
     // Create pagination dots
     cards.forEach((_, i) => {
@@ -185,8 +188,10 @@ function initFeaturesCarousel() {
 
     function goToSlide(index) {
         currentIndex = index;
-        const scrollAmount = grid.offsetWidth * index;
-        grid.scrollTo({ left: scrollAmount, behavior: "smooth" });
+        const cardWidth = cards[0].offsetWidth;
+        const moveDistance = (cardWidth + gap) * index;
+        
+        grid.style.transform = `translateX(-${moveDistance}px)`;
 
         // Update dots UI
         document.querySelectorAll(".dot").forEach((d, i) => {
@@ -194,21 +199,15 @@ function initFeaturesCarousel() {
         });
     }
 
-    document.getElementById("features-next").onclick = () => {
+    nextBtn.onclick = () => {
         currentIndex = (currentIndex + 1) % cards.length;
         goToSlide(currentIndex);
     };
 
-    document.getElementById("features-prev").onclick = () => {
+    prevBtn.onclick = () => {
         currentIndex = (currentIndex - 1 + cards.length) % cards.length;
         goToSlide(currentIndex);
     };
-
-    // Auto-moving slide (every 5 seconds)
-    autoPlay = setInterval(() => document.getElementById("features-next").click(), 5000);
-
-    // Pause autoplay on user interaction
-    grid.addEventListener("touchstart", () => clearInterval(autoPlay), {passive: true});
 }
 
 function switchTab(tab) {
