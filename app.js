@@ -476,7 +476,7 @@ function renderVocab() {
 
     el.innerHTML = `
         <div class="vocab-header">
-            Today's 10 Words — <em>${src}</em>
+            10 Daily Vocab — <em>${src}</em> for ${esc(state.dates.searchDate)}
         </div>
         <div class="vocab-list">${items}</div>`;
 }
@@ -505,7 +505,11 @@ function renderArticles() {
             </a>
         </div>`).join("");
 
-    el.innerHTML = `<div class="articles-list">${cards}</div>`;
+    el.innerHTML = `
+        <div class="vocab-header">
+            Articles for ${esc(state.dates.searchDate)}
+        </div>
+        <div class="articles-list">${cards}</div>`;
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -559,7 +563,7 @@ function renderQuiz() {
 
     el.innerHTML = `
         <div class="quiz-header">
-            <div class="quiz-title">Daily Quiz</div>
+            <div class="quiz-title">Daily Quiz — ${esc(state.dates.searchDate)}</div>
             <div class="quiz-score-badge">Score ${qs.score} / ${total}</div>
         </div>
         <div class="quiz-progress">
