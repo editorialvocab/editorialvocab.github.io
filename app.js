@@ -33,10 +33,6 @@ const state = {
 // ── Date helpers ──────────────────────────────────────────────────
 function buildDates(specificDate = null) {
     const now = specificDate || new Date();
-    // If auto-initializing and before 11:30 AM, use yesterday's data
-    if (!specificDate && (now.getHours() < 11 || (now.getHours() === 11 && now.getMinutes() < 30))) {
-        now.setDate(now.getDate() - 1);
-    }
     const dd    = String(now.getDate()).padStart(2, "0");
     const mm    = String(now.getMonth() + 1).padStart(2, "0");
     const yyyy  = now.getFullYear();
@@ -72,6 +68,7 @@ async function init() {
     initFeaturesCarousel();
     await detectRegion();       // auto-detect first (fast)
     await loadAll();
+    updateVisitorCount();
 }
 
 // ── Region detection ──────────────────────────────────────────────
@@ -101,7 +98,7 @@ function setRegion(reg) {
 }
 
 // ── Load all data ─────────────────────────────────────────────────
-async function loadAll() {
+async function loadAll(isRetry = false) {
     showLoader(true);
     const { daily, monthly, year, month, searchDate } = state.dates;
     const sf     = state.suffix;
@@ -124,6 +121,15 @@ async function loadAll() {
         fetchJSON(`${BASE}/articles/${folder}/${year}/${month}/${daily}.json`),
     ]);
 
+    // FALLBACK FLOW: If vocab data is missing and we haven't retried yet, try yesterday
+    if (!vocabData && !isRetry) {
+        console.log("Today's data not found, falling back to yesterday...");
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        buildDates(yesterday);
+        return loadAll(true); // Run again with yesterday's date
+    }
+
     // WOD: find today's entry by date string
     if (Array.isArray(wodData)) {
         state.wod = wodData.find(w => w.date && w.date.includes(searchDate)) || null;
@@ -144,6 +150,27 @@ async function loadAll() {
     renderAppDownloadIcon(); // Call the new function here
     renderSocialLinks();     // Dynamic social media links
     renderDatePicker();      // Refresh date picker active state
+}
+
+// ── Visitor Counter ───────────────────────────────────────────────
+async function updateVisitorCount() {
+    const countEl = document.getElementById("visitor-count");
+    const APP_BASE = 106000; // Your initial app install count
+    const url = "https://api.countapi.xyz/hit/editorial-vocab-web/visits";
+    
+    try {
+        const data = await fetchJSON(url);
+        const total = APP_BASE + (data?.value || 0);
+        countEl.innerHTML = `
+            <span class="count-number">${total.toLocaleString()}</span>
+            <span class="count-label">Aspirants Learning</span>
+        `;
+    } catch (e) {
+        countEl.innerHTML = `
+            <span class="count-number">${APP_BASE.toLocaleString()}</span>
+            <span class="count-label">Aspirants Learning</span>
+        `;
+    }
 }
 
 // ── Bind UI ───────────────────────────────────────────────────────

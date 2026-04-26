@@ -851,6 +851,33 @@ button { cursor: pointer; font-family: inherit; }
     padding: 18px 0 24px;
     text-align: center;
 }
+.visitor-stats {
+    margin-top: 20px;
+    font-family: 'DM Mono', monospace;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 8px 16px;
+    background: rgba(201, 168, 76, 0.05);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    color: var(--gold-lt);
+}
+.visitor-icon {
+    font-size: 0.9rem;
+    animation: softPulse 2s infinite;
+}
+.count-number {
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+}
+.count-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    color: var(--text-mute);
+}
 .footer-bottom p {
     font-size: 0.75rem;
     color: var(--text-mute);
@@ -900,6 +927,11 @@ button { cursor: pointer; font-family: inherit; }
 @keyframes dotBounce {
     0%, 80%, 100% { transform: translateY(0);   opacity: 0.5; }
     40%           { transform: translateY(-8px); opacity: 1;   }
+}
+@keyframes softPulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.8; }
 }
 
 /* stagger vocab/article items */
