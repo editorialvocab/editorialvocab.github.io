@@ -572,6 +572,98 @@ button { cursor: pointer; font-family: inherit; }
 .quiz-btn-primary {
     background: var(--gold);
     color: var(--navy);
+    border: none;
+    padding: 12px 32px;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    transition: var(--transition);
+}
+.quiz-restart-btn:hover { background: var(--gold-lt); }
+
+/* ── Features Carousel ───────────────────────────────────────────── */
+.features-section {
+    padding: 80px 0;
+    background: var(--navy);
+    text-align: center;
+    border-top: 1px solid var(--border-dim);
+}
+.features-carousel-wrapper {
+    position: relative;
+    overflow: hidden; /* Mask for the sliding cards */
+    padding: 20px 0;
+    margin: 0 auto;
+    max-width: 100%;
+}
+.features-grid {
+    display: flex;
+    gap: 24px; /* Space between cards */
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+    padding-left: 0; /* Align first card to left */
+}
+.feature-card {
+    flex: 0 0 280px; /* Fixed width, no shrinking */
+    background: var(--navy-2);
+    border: 1px solid var(--border-dim);
+    border-radius: var(--radius-lg);
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: var(--transition);
+}
+.feature-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--gold-dim);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 20px rgba(201,168,76,0.1);
+}
+.carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(26, 36, 53, 0.8);
+    backdrop-filter: blur(8px);
+    color: var(--gold);
+    border: 1px solid var(--border);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.carousel-nav:hover { background: var(--gold); color: var(--navy); }
+.carousel-nav.prev { left: 10px; }
+.carousel-nav.next { right: 10px; }
+
+.carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 24px;
+}
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--navy-4);
+    cursor: pointer;
+    transition: var(--transition);
+}
+.dot.active {
+    background: var(--gold);
+    transform: scale(1.3);
+}
+
+@media (max-width: 768px) {
+    .feature-card { flex: 0 0 260px; }
+    .carousel-nav { display: none; } /* Better touch experience without buttons */
 }
 .quiz-btn-primary:hover { background: var(--gold-lt); }
 .quiz-btn-secondary {

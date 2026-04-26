@@ -169,16 +169,19 @@ function bindUI() {
 
 // ── Features Carousel Logic ──────────────────────────────────────
 function initFeaturesCarousel() {
+    const wrapper = document.getElementById("carousel-wrapper");
     const grid = document.getElementById("features-grid");
-    const dotsContainer = document.getElementById("features-dots");
     const cards = grid.querySelectorAll(".feature-card");
+    const dotsContainer = document.getElementById("features-dots");
     const nextBtn = document.getElementById("features-next");
     const prevBtn = document.getElementById("features-prev");
-    
-    let currentIndex = 0;
-    const gap = 20; // Matches CSS gap
 
-    // Create pagination dots
+    let currentIndex = 0;
+    const gap = 24; // Must match CSS gap
+    let startX = 0;
+    let isDragging = false;
+
+    // Initialize pagination dots
     cards.forEach((_, i) => {
         const dot = document.createElement("div");
         dot.className = `dot ${i === 0 ? 'active' : ''}`;
@@ -186,28 +189,67 @@ function initFeaturesCarousel() {
         dotsContainer.appendChild(dot);
     });
 
-    function goToSlide(index) {
-        currentIndex = index;
+    function updateNavButtons() {
+        // Optional: Hide buttons if at boundaries, or keep for loop-around
+        prevBtn.style.display = currentIndex === 0 ? "none" : "flex";
+        // Calculate if we can still slide next
         const cardWidth = cards[0].offsetWidth;
-        const moveDistance = (cardWidth + gap) * index;
-        
-        grid.style.transform = `translateX(-${moveDistance}px)`;
-
-        // Update dots UI
-        document.querySelectorAll(".dot").forEach((d, i) => {
-            d.classList.toggle("active", i === index);
-        });
+        const totalWidth = (cardWidth + gap) * cards.length - gap;
+        const visibleWidth = wrapper.offsetWidth;
+        nextBtn.style.display = (currentIndex * (cardWidth + gap) + visibleWidth) >= totalWidth ? "none" : "flex";
     }
 
-    nextBtn.onclick = () => {
-        currentIndex = (currentIndex + 1) % cards.length;
-        goToSlide(currentIndex);
-    };
+    function goToSlide(index) {
+        if (index < 0) index = 0;
+        if (index >= cards.length) index = cards.length - 1;
 
-    prevBtn.onclick = () => {
-        currentIndex = (currentIndex - 1 + cards.length) % cards.length;
-        goToSlide(currentIndex);
-    };
+        currentIndex = index;
+        const cardWidth = cards[0].offsetWidth;
+        const moveX = index * (cardWidth + gap);
+
+        grid.style.transform = `translateX(-${moveX}px)`;
+
+        // Update dots
+        document.querySelectorAll(".dot").forEach((d, i) => d.classList.toggle("active", i === index));
+        updateNavButtons();
+    }
+
+    nextBtn.onclick = () => goToSlide(currentIndex + 1);
+    prevBtn.onclick = () => goToSlide(currentIndex - 1);
+
+    // Mobile Swipe Support
+    wrapper.addEventListener("touchstart", (e) => {
+        startX = e.touches[0].clientX;
+        isDragging = true;
+    }, { passive: true });
+
+    wrapper.addEventListener("touchend", (e) => {
+        if (!isDragging) return;
+        const endX = e.changedTouches[0].clientX;
+        const diff = startX - endX;
+
+        if (Math.abs(diff) > 50) { // threshold for swipe
+            if (diff > 0) goToSlide(currentIndex + 1);
+            else goToSlide(currentIndex - 1);
+        }
+        isDragging = false;
+    }, { passive: true });
+
+    // Auto-slide functionality (4 seconds)
+    let autoTimer = setInterval(() => {
+        let nextIdx = (currentIndex + 1) % cards.length;
+        // If it's the last one, reset slowly or stop. Here we reset to 0.
+        goToSlide(nextIdx);
+    }, 4000);
+
+    // Stop auto-slide on user interaction
+    wrapper.addEventListener("mouseenter", () => clearInterval(autoTimer));
+    wrapper.addEventListener("touchstart", () => clearInterval(autoTimer));
+
+    // Handle window resize to keep translation accurate
+    window.addEventListener("resize", () => goToSlide(currentIndex));
+
+    updateNavButtons();
 }
 
 function switchTab(tab) {
