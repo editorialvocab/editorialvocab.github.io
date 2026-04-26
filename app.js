@@ -196,8 +196,8 @@ function renderAppDownloadIcon() {
     if (!appIconLink || !appIconImg) return; // Ensure elements exist
 
     const appIconPath = state.region === "BD"
-        ? "image/appIcon/app_icon_dailyStar.PNG"
-        : "image/appIcon/app_icon_The_Hindu.PNG";
+        ? "image/appIcon/app_icon_dailyStar.png"
+        : "image/appIcon/app_icon_The_Hindu.png";
 
     // The Play Store link is constant for this app
     const playStoreLink = "https://play.google.com/store/apps/details?id=megaminds.dailyeditorialword";
