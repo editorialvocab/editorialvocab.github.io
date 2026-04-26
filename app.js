@@ -95,6 +95,27 @@ async function detectRegion() {
 function setRegion(reg) {
     state.region = reg;
     state.suffix = reg === "BD" ? "EnToBn" : "EnToHn";
+    updateBrandUI();
+}
+
+function updateBrandUI() {
+    const topBrand = document.getElementById("brand-name-top");
+    const footerBrand = document.getElementById("brand-name-footer");
+    const badge = document.getElementById("brand-badge");
+    
+    if (!topBrand || !badge) return;
+
+    const isBD = state.region === "BD";
+    const mainTitle = isBD 
+        ? `Daily Star Vocab & Editorials <span class="brand-accent">Official</span>`
+        : `Hindu Vocab & Editorials <span class="brand-accent">Official</span>`;
+    
+    const badgeShort = isBD ? "Daily Star Vocab" : "Hindu Vocab";
+
+    topBrand.innerHTML = mainTitle;
+    if (footerBrand) footerBrand.innerHTML = mainTitle;
+    
+    badge.innerHTML = `⚡ ${badgeShort} Official | 106 K + Aspirants | 4.8 ⭐ Rating`;
 }
 
 // ── Load all data ─────────────────────────────────────────────────

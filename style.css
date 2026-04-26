@@ -81,11 +81,29 @@ button { cursor: pointer; font-family: inherit; }
     height: 60px;
     gap: 12px;
 }
+.nav-brand-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 .nav-brand {
     display: flex;
     align-items: center;
     gap: 8px;
     flex-shrink: 0;
+}
+.brand-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--gold);
+    margin-top: 1px;
+    padding-left: 28px; /* Align with text after the icon */
+    opacity: 0.9;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 4px;
 }
 .brand-icon { font-size: 1.3rem; }
 .brand-name {
