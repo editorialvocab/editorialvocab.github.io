@@ -69,6 +69,7 @@ async function fetchJSON(url) {
 async function init() {
     buildDates();
     bindUI();
+    initFeaturesCarousel();
     await detectRegion();       // auto-detect first (fast)
     await loadAll();
 }
@@ -164,6 +165,50 @@ function bindUI() {
         backTop.classList.toggle("visible", window.scrollY > 300);
     }, { passive: true });
     backTop.onclick = () => window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+// ── Features Carousel Logic ──────────────────────────────────────
+function initFeaturesCarousel() {
+    const grid = document.getElementById("features-grid");
+    const dotsContainer = document.getElementById("features-dots");
+    const cards = grid.querySelectorAll(".feature-card");
+    let currentIndex = 0;
+    let autoPlay;
+
+    // Create pagination dots
+    cards.forEach((_, i) => {
+        const dot = document.createElement("div");
+        dot.className = `dot ${i === 0 ? 'active' : ''}`;
+        dot.onclick = () => goToSlide(i);
+        dotsContainer.appendChild(dot);
+    });
+
+    function goToSlide(index) {
+        currentIndex = index;
+        const scrollAmount = grid.offsetWidth * index;
+        grid.scrollTo({ left: scrollAmount, behavior: "smooth" });
+
+        // Update dots UI
+        document.querySelectorAll(".dot").forEach((d, i) => {
+            d.classList.toggle("active", i === index);
+        });
+    }
+
+    document.getElementById("features-next").onclick = () => {
+        currentIndex = (currentIndex + 1) % cards.length;
+        goToSlide(currentIndex);
+    };
+
+    document.getElementById("features-prev").onclick = () => {
+        currentIndex = (currentIndex - 1 + cards.length) % cards.length;
+        goToSlide(currentIndex);
+    };
+
+    // Auto-moving slide (every 5 seconds)
+    autoPlay = setInterval(() => document.getElementById("features-next").click(), 5000);
+
+    // Pause autoplay on user interaction
+    grid.addEventListener("touchstart", () => clearInterval(autoPlay), {passive: true});
 }
 
 function switchTab(tab) {
