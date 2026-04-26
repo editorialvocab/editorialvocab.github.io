@@ -31,10 +31,10 @@ const state = {
 };
 
 // ── Date helpers ──────────────────────────────────────────────────
-function buildDates() {
-    const now = new Date();
-    // If before 8:30 AM, use yesterday's data (pipeline runs at noon)
-    if (now.getHours() < 8 || (now.getHours() === 8 && now.getMinutes() < 30)) {
+function buildDates(specificDate = null) {
+    const now = specificDate || new Date();
+    // If auto-initializing and before 11:30 AM, use yesterday's data
+    if (!specificDate && (now.getHours() < 11 || (now.getHours() === 11 && now.getMinutes() < 30))) {
         now.setDate(now.getDate() - 1);
     }
     const dd    = String(now.getDate()).padStart(2, "0");
@@ -142,6 +142,8 @@ async function loadAll() {
     renderWOD();
     renderActiveTab();
     renderAppDownloadIcon(); // Call the new function here
+    renderSocialLinks();     // Dynamic social media links
+    renderDatePicker();      // Refresh date picker active state
 }
 
 // ── Bind UI ───────────────────────────────────────────────────────
@@ -293,6 +295,72 @@ function renderAppDownloadIcon() {
     appIconLink.title = `Download on Google Play (${state.region === "BD" ? "Daily Star" : "The Hindu"} version)`;
 }
 
+// ── Render Social Links ───────────────────────────────────────────
+function renderSocialLinks() {
+    const fbLink = document.getElementById("footer-fb");
+    const ytLink = document.getElementById("footer-yt");
+    const igLink = document.getElementById("footer-ig");
+    const tag    = document.getElementById("social-region-tag");
+
+    if (!fbLink || !ytLink) return;
+
+    // Define your region-specific handles here based on project_reference.md
+    // If you haven't created the second channel yet, you can keep them identical for now
+    const links = {
+        BD: {
+            fb: "https://www.facebook.com/editorialvocabapp", // Existing 19K page
+            yt: "https://www.youtube.com/@editorialvocabapp", // Existing channel
+            label: "(Bangladesh)"
+        },
+        IN: {
+            fb: "https://www.facebook.com/editorialvocabapp", // Update this when you create the India page
+            yt: "https://www.youtube.com/@editorialvocabapp", // Update this when you create the India YT
+            label: "(India)"
+        }
+    };
+
+    const active = links[state.region];
+    fbLink.href = active.fb;
+    ytLink.href = active.yt;
+    tag.textContent = active.label;
+
+    // Instagram is generally India-heavy/Universal per documentation
+    igLink.href = "https://www.instagram.com/editorialvocabapp";
+}
+
+// ── Date Picker Logic ─────────────────────────────────────────────
+function renderDatePicker() {
+    const container = document.getElementById("date-selector");
+    if (!container) return;
+
+    const today = new Date();
+    if (today.getHours() < 11 || (today.getHours() === 11 && today.getMinutes() < 30)) {
+        today.setDate(today.getDate() - 1);
+    }
+
+    let html = "";
+    for (let i = 0; i < 3; i++) {
+        const d = new Date(today);
+        d.setDate(d.getDate() - i);
+        const dd = String(d.getDate()).padStart(2, "0");
+        const mm = String(d.getMonth() + 1).padStart(2, "0");
+        const yyyy = d.getFullYear();
+        const dateStr = `${dd}-${mm}-${yyyy}`;
+        const label = i === 0 ? "Today" : i === 1 ? "Yesterday" : d.getDate() + " " + d.toLocaleString('en-US', { month: 'short' });
+        const active = state.dates.daily === dateStr ? "active" : "";
+        
+        html += `<button class="date-pill ${active}" onclick="selectDate('${dateStr}')">${label}</button>`;
+    }
+    container.innerHTML = html;
+}
+
+window.selectDate = (dateStr) => {
+    const [dd, mm, yyyy] = dateStr.split("-").map(Number);
+    const d = new Date(yyyy, mm - 1, dd);
+    buildDates(d);
+    loadAll();
+};
+
 // ═══════════════════════════════════════════════════════════════
 //  WORD OF THE DAY
 // ═══════════════════════════════════════════════════════════════
@@ -317,6 +385,7 @@ function renderWOD() {
     const ants   = (wod.antonyms || []).slice(0, 5).map(a => `<span class="chip">${esc(a)}</span>`).join("");
 
     el.innerHTML = `
+        <div class="wod-date-top">${esc(state.dates.searchDate)}</div>
         ${wod.word ? `<div class="wod-word">${esc(wod.word)}</div>` : ""}
         ${wod.phonetic ? `<div class="wod-phonetic">${esc(wod.phonetic)}</div>` : ""}
         ${wod.part_of_speech ? `<div class="wod-pos">${esc(wod.part_of_speech)}</div>` : ""}
