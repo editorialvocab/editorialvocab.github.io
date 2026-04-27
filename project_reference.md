@@ -307,7 +307,7 @@ running on scheduled pipelines (GitLab bug: `changes:` always true on schedules)
 **Verdict:** Strongly recommended for YouTube. Low cost, high benefit.
 
 ### ✅ Recommended Action Plan (priority order)
-1. **Immediately:** Create separate YouTube channel for BD Bengali content
+1. **Immediately:** Create separate YouTube channel for BD Bengali content (Handle: @EditorialVocabAppBD)
 2. **Month 2:** Create new FB page for BD (invite 19K followers via post)
 3. **Month 3:** Move all BD content to new page, use @editorialvocabapp purely for India
 4. **Keep:** One Instagram @editorialvocabapp for India (Instagram is India-heavy anyway)

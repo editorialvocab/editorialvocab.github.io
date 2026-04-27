@@ -353,11 +353,10 @@ function renderSocialLinks() {
     if (!fbLink || !ytLink) return;
 
     // Define your region-specific handles here based on project_reference.md
-    // If you haven't created the second channel yet, you can keep them identical for now
     const links = {
         BD: {
             fb: "https://www.facebook.com/editorialvocabapp", // Existing 19K page
-            yt: "https://www.youtube.com/@editorialvocabapp", // Existing channel
+            yt: "https://www.youtube.com/@EditorialVocabAppBD", // New BD Channel
             label: "(Bangladesh)"
         },
         IN: {
