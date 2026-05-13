@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Editorial Vocabulary — Master English for Competitive Exams</title>
-    <meta name="description" content="Daily vocabulary from The Hindu & Daily Star editorials. Perfect for UPSC, SSC, BCS, PSC exam preparation.">
+    <title>Editorial Vocabulary — Master English for UPSC, SSC, BCS, PSC</title>
+    <meta name="description" content="Daily vocabulary from The Hindu & Daily Star editorials. Word of the Day, 10 daily vocab, interactive quiz, and real Previous Year Questions for UPSC, SSC, BCS, PSC exam prep.">
     <meta name="theme-color" content="#0a0f1e">
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/promahadihasan/promahadihasan/main/files/dailyEditorial.svg">
 
     <!-- Open Graph -->
-    <meta property="og:title" content="Editorial Vocabulary App">
-    <meta property="og:description" content="Master newspaper editorials. Daily vocab, quiz, articles — FREE.">
+    <meta property="og:title" content="Editorial Vocabulary — UPSC, SSC, BCS, PSC Prep">
+    <meta property="og:description" content="Daily vocab from The Hindu & Daily Star. Word of the Day, quizzes, editorials — FREE.">
     <meta property="og:image" content="https://raw.githubusercontent.com/promahadihasan/promahadihasan/main/files/dailyEditorial.svg">
 
     <!-- Fonts -->
@@ -21,10 +21,422 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
+
+    <style>
+    /* ═══════════════════════════════════════════════════════════════
+       SIDEBAR LAYOUT — additive styles only, nothing overridden
+       ═══════════════════════════════════════════════════════════════ */
+
+    /* ── 3-column page grid ──────────────────────────────────────── */
+    .page-layout {
+        display: grid;
+        grid-template-columns: 240px minmax(0,680px) 240px;
+        gap: 0;
+        justify-content: center;
+        align-items: start;
+        padding: 0 16px;
+        max-width: 1220px;
+        margin: 0 auto;
+    }
+
+    /* ── Sidebar shared ─────────────────────────────────────────── */
+    .sidebar {
+        padding: 28px 14px 40px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        position: sticky;
+        top: 68px;           /* below the 60px nav */
+        max-height: calc(100vh - 80px);
+        overflow-y: auto;
+        scrollbar-width: none;
+    }
+    .sidebar::-webkit-scrollbar { display: none; }
+
+    /* ── Sidebar card ───────────────────────────────────────────── */
+    .sb-card {
+        background: var(--navy-2);
+        border: 1px solid var(--border-dim);
+        border-radius: var(--radius-lg);
+        padding: 18px 16px;
+        animation: fadeUp 0.4s ease both;
+    }
+    .sb-card:hover { border-color: var(--border); }
+    .sb-title {
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--gold-dim);
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .sb-title::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: var(--border-dim);
+    }
+
+    /* ── Stat row ───────────────────────────────────────────────── */
+    .stat-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+    .stat-box {
+        background: var(--navy-3);
+        border-radius: var(--radius-md);
+        padding: 12px 10px;
+        text-align: center;
+    }
+    .stat-num {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--gold-lt);
+        line-height: 1;
+        margin-bottom: 4px;
+    }
+    .stat-lbl {
+        font-size: 0.62rem;
+        color: var(--text-mute);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+    }
+
+    /* ── Exam pill ──────────────────────────────────────────────── */
+    .exam-list { display: flex; flex-direction: column; gap: 8px; }
+    .exam-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 10px 12px;
+        background: var(--navy-3);
+        border-radius: var(--radius-md);
+        border: 1px solid transparent;
+        transition: var(--transition);
+    }
+    .exam-row:hover { border-color: var(--border); }
+    .exam-badge {
+        font-family: 'DM Mono', monospace;
+        font-size: 0.6rem;
+        font-weight: 600;
+        padding: 2px 7px;
+        border-radius: 100px;
+        white-space: nowrap;
+        flex-shrink: 0;
+        margin-top: 1px;
+    }
+    .badge-upsc { background: rgba(79,142,247,0.15); color: #4f8ef7; }
+    .badge-ssc  { background: rgba(62,207,142,0.15); color: #3ecf8e; }
+    .badge-bcs  { background: rgba(201,168,76,0.18); color: var(--gold); }
+    .badge-psc  { background: rgba(248,113,113,0.15); color: #f87171; }
+    .exam-info { flex: 1; }
+    .exam-name {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--cream);
+        margin-bottom: 2px;
+    }
+    .exam-desc {
+        font-size: 0.72rem;
+        color: var(--text-mute);
+        line-height: 1.4;
+    }
+
+    /* ── Step list (how to study) ───────────────────────────────── */
+    .step-list { display: flex; flex-direction: column; gap: 12px; }
+    .step-row {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+    }
+    .step-num {
+        width: 22px;
+        height: 22px;
+        background: rgba(201,168,76,0.12);
+        border: 1px solid var(--border);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'DM Mono', monospace;
+        font-size: 0.65rem;
+        color: var(--gold);
+        font-weight: 600;
+        flex-shrink: 0;
+        margin-top: 1px;
+    }
+    .step-text {
+        font-size: 0.78rem;
+        color: var(--text-dim);
+        line-height: 1.5;
+    }
+    .step-text strong { color: var(--cream); font-weight: 600; }
+
+    /* ── Mission list ───────────────────────────────────────────── */
+    .mission-list { display: flex; flex-direction: column; gap: 6px; }
+    .mission-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 10px;
+        background: var(--navy-3);
+        border-radius: var(--radius-sm);
+        gap: 8px;
+    }
+    .mission-label {
+        font-size: 0.77rem;
+        color: var(--text-dim);
+        flex: 1;
+    }
+    .mission-xp {
+        font-family: 'DM Mono', monospace;
+        font-size: 0.65rem;
+        font-weight: 600;
+        color: var(--gold);
+        background: rgba(201,168,76,0.1);
+        border-radius: 100px;
+        padding: 2px 8px;
+        white-space: nowrap;
+    }
+    .mission-total {
+        margin-top: 10px;
+        text-align: right;
+        font-family: 'DM Mono', monospace;
+        font-size: 0.72rem;
+        color: var(--text-mute);
+    }
+    .mission-total strong { color: var(--gold-lt); }
+
+    /* ── Source newspaper row ───────────────────────────────────── */
+    .source-list { display: flex; flex-direction: column; gap: 8px; }
+    .source-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 9px 12px;
+        background: var(--navy-3);
+        border-radius: var(--radius-md);
+    }
+    .source-flag { font-size: 1rem; flex-shrink: 0; }
+    .source-info { flex: 1; }
+    .source-name {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--cream);
+    }
+    .source-sub {
+        font-size: 0.68rem;
+        color: var(--text-mute);
+        margin-top: 1px;
+    }
+    .source-tag {
+        font-family: 'DM Mono', monospace;
+        font-size: 0.6rem;
+        color: var(--gold-dim);
+        border: 1px solid var(--border-dim);
+        border-radius: 100px;
+        padding: 1px 6px;
+    }
+
+    /* ── PYQ badge explanation ──────────────────────────────────── */
+    .pyq-explain {
+        background: rgba(201,168,76,0.06);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 12px;
+    }
+    .pyq-explain p {
+        font-size: 0.76rem;
+        color: var(--text-dim);
+        line-height: 1.6;
+        margin: 0;
+    }
+    .pyq-explain p + p { margin-top: 8px; }
+    .pyq-tag {
+        display: inline-block;
+        font-family: 'DM Mono', monospace;
+        font-size: 0.62rem;
+        padding: 1px 8px;
+        border-radius: 100px;
+        vertical-align: middle;
+        margin: 0 2px;
+    }
+    .pyq-tag.gold { background: rgba(201,168,76,0.18); color: var(--gold); }
+    .pyq-tag.blue { background: rgba(79,142,247,0.15); color: #4f8ef7; }
+
+    /* ── Mini download CTA in sidebar ──────────────────────────── */
+    .sb-download {
+        background: linear-gradient(135deg, var(--navy-3), var(--navy-4));
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 16px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    .sb-download::before {
+        content: '';
+        position: absolute;
+        top: -30px; right: -30px;
+        width: 100px; height: 100px;
+        background: radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 70%);
+        pointer-events: none;
+    }
+    .sb-download-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 0.95rem;
+        color: var(--cream);
+        margin-bottom: 6px;
+    }
+    .sb-download-sub {
+        font-size: 0.72rem;
+        color: var(--text-mute);
+        margin-bottom: 14px;
+        line-height: 1.4;
+    }
+    .sb-download-btn {
+        display: block;
+        background: var(--gold);
+        color: var(--navy);
+        font-weight: 700;
+        font-size: 0.8rem;
+        padding: 9px 16px;
+        border-radius: var(--radius-sm);
+        transition: var(--transition);
+        text-align: center;
+    }
+    .sb-download-btn:hover { background: var(--gold-lt); color: var(--navy); }
+
+    /* ── About blurb ────────────────────────────────────────────── */
+    .about-blurb {
+        font-size: 0.78rem;
+        color: var(--text-dim);
+        line-height: 1.65;
+    }
+    .about-blurb + .about-blurb { margin-top: 8px; }
+
+    /* ── "Built by" dev card ────────────────────────────────────── */
+    .dev-card {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        background: var(--navy-3);
+        border-radius: var(--radius-md);
+        margin-top: 10px;
+    }
+    .dev-avatar {
+        width: 36px; height: 36px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--gold-dim), var(--navy-4));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        flex-shrink: 0;
+    }
+    .dev-name {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--cream);
+    }
+    .dev-role {
+        font-size: 0.68rem;
+        color: var(--text-mute);
+        margin-top: 1px;
+    }
+
+    /* ── Social icons strip ─────────────────────────────────────── */
+    .social-strip {
+        display: flex;
+        gap: 8px;
+        margin-top: 12px;
+        flex-wrap: wrap;
+    }
+    .social-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 10px;
+        background: var(--navy-3);
+        border: 1px solid var(--border-dim);
+        border-radius: 100px;
+        font-size: 0.68rem;
+        color: var(--text-mute);
+        transition: var(--transition);
+    }
+    .social-pill:hover { border-color: var(--border); color: var(--gold); }
+
+    /* ── Update timeline ────────────────────────────────────────── */
+    .timeline { display: flex; flex-direction: column; gap: 10px; }
+    .tl-row {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+    }
+    .tl-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--gold-dim);
+        flex-shrink: 0;
+        margin-top: 5px;
+    }
+    .tl-dot.new { background: var(--gold); }
+    .tl-text {
+        font-size: 0.76rem;
+        color: var(--text-dim);
+        line-height: 1.5;
+    }
+    .tl-text .tl-tag {
+        font-size: 0.6rem;
+        font-family: 'DM Mono', monospace;
+        padding: 1px 6px;
+        border-radius: 100px;
+        background: rgba(201,168,76,0.12);
+        color: var(--gold);
+        vertical-align: middle;
+        margin-right: 4px;
+    }
+
+    /* ── Region-aware visibility ────────────────────────────────── */
+    .show-in   { display: none; }  /* India content */
+    .show-bd   { display: none; }  /* Bangladesh content */
+    body.region-in .show-in { display: block; }
+    body.region-bd .show-bd { display: block; }
+    /* default: show both */
+    body:not(.region-in):not(.region-bd) .show-in,
+    body:not(.region-in):not(.region-bd) .show-bd { display: block; }
+
+    /* ── Responsive ─────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+        .page-layout {
+            grid-template-columns: 1fr;
+            padding: 0;
+        }
+        .sidebar-left { order: 3; padding: 0 20px 32px; position: static; max-height: none; }
+        .sidebar-right { order: 2; padding: 0 20px 0;    position: static; max-height: none; }
+        .sidebar-left  .sb-card,
+        .sidebar-right .sb-card { display: none; }
+        /* On mobile only show these condensed cards */
+        .sidebar-left  .sb-mobile-show,
+        .sidebar-right .sb-mobile-show { display: block; }
+        .sb-mobile-show { display: block !important; }
+        .stat-grid { grid-template-columns: repeat(4,1fr); }
+    }
+    @media (max-width: 480px) {
+        .stat-grid { grid-template-columns: 1fr 1fr; }
+    }
+    </style>
 </head>
 <body>
 
-    <!-- ── TOP NAV ──────────────────────────────────────────────────────── -->
+    <!-- ── TOP NAV ─────────────────────────────────────────────────── -->
     <header class="top-nav">
         <div class="nav-inner">
             <div class="nav-brand-group">
@@ -50,53 +462,366 @@
     </header>
 
     <main>
+        <div class="page-layout">
 
-        <!-- ── HERO WORD OF THE DAY ──────────────────────────────────────── -->
-        <section class="wod-section">
-            <div class="wod-header-flex">
-                <div class="wod-eyebrow">Word of the Day</div>
-                <div id="date-selector" class="date-selector"></div>
-            </div>
-            <div id="wod-card" class="wod-card">
-                <div class="wod-skeleton">
-                    <div class="skel skel-title"></div>
-                    <div class="skel skel-sub"></div>
-                    <div class="skel skel-body"></div>
-                    <div class="skel skel-body short"></div>
+            <!-- ═══════════════════════════════════════════════════════
+                 LEFT SIDEBAR — App info, Exam categories, Study plan
+                 ═══════════════════════════════════════════════════════ -->
+            <aside class="sidebar sidebar-left">
+
+                <!-- About the App -->
+                <div class="sb-card">
+                    <div class="sb-title">📖 About This App</div>
+                    <p class="about-blurb">
+                        Daily vocabulary extracted from <strong style="color:var(--cream)">The Hindu</strong> and
+                        <strong style="color:var(--cream)">The Daily Star</strong> editorials — the most-read
+                        newspapers for competitive exam prep in India and Bangladesh.
+                    </p>
+                    <p class="about-blurb" style="margin-top:8px;">
+                        Every word is cross-referenced against <strong style="color:var(--cream)">real Previous
+                        Year Questions</strong> from UPSC, SSC, BCS, and PSC exams, so you learn words that
+                        actually matter.
+                    </p>
+                    <div class="dev-card">
+                        <div class="dev-avatar">👨‍💻</div>
+                        <div>
+                            <div class="dev-name">Mahadi Hasan</div>
+                            <div class="dev-role">Android Developer · Tangail, BD</div>
+                        </div>
+                    </div>
+                    <div class="social-strip">
+                        <a class="social-pill" href="https://github.com/promahadihasan" target="_blank" rel="noopener">
+                            <img src="https://raw.githubusercontent.com/promahadihasan/promahadihasan/main/files/github_icon.svg" width="12" height="12" alt="GitHub"> GitHub
+                        </a>
+                        <a class="social-pill" href="https://linkedin.com/in/promahadihasan" target="_blank" rel="noopener">
+                            <img src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" width="12" height="12" alt="LinkedIn"> LinkedIn
+                        </a>
+                    </div>
                 </div>
-            </div>
-        </section>
 
-        <!-- ── TABS ──────────────────────────────────────────────────────── -->
-        <section class="tabs-section">
-            <div class="tabs-bar">
-                <button class="tab-btn active" data-tab="vocab">
-                    <span class="tab-icon">📚</span>
-                    <span>10 Daily Vocab</span>
-                </button>
-                <button class="tab-btn" data-tab="articles">
-                    <span class="tab-icon">📰</span>
-                    <span>Articles</span>
-                </button>
-                <button class="tab-btn" data-tab="quiz">
-                    <span class="tab-icon">✏️</span>
-                    <span>Quiz</span>
-                </button>
-            </div>
+                <!-- Exam Categories -->
+                <div class="sb-card">
+                    <div class="sb-title">🎯 Exam Coverage</div>
+                    <div class="exam-list">
+                        <div class="exam-row show-in">
+                            <span class="exam-badge badge-upsc">UPSC</span>
+                            <div class="exam-info">
+                                <div class="exam-name">Civil Services</div>
+                                <div class="exam-desc">IAS, IPS, IFS — India's premier exam. Vocab from The Hindu editorials.</div>
+                            </div>
+                        </div>
+                        <div class="exam-row show-in">
+                            <span class="exam-badge badge-ssc">SSC</span>
+                            <div class="exam-info">
+                                <div class="exam-name">SSC CGL / CHSL</div>
+                                <div class="exam-desc">English section PYQs. Synonyms, antonyms, and one-word substitutions.</div>
+                            </div>
+                        </div>
+                        <div class="exam-row show-bd">
+                            <span class="exam-badge badge-bcs">BCS</span>
+                            <div class="exam-info">
+                                <div class="exam-name">Bangladesh Civil Service</div>
+                                <div class="exam-desc">English vocabulary section. Daily Star editorials + BCS PYQs.</div>
+                            </div>
+                        </div>
+                        <div class="exam-row show-bd">
+                            <span class="exam-badge badge-psc">PSC</span>
+                            <div class="exam-info">
+                                <div class="exam-name">Public Service Commission</div>
+                                <div class="exam-desc">Combined PSC and banking exam vocab preparation.</div>
+                            </div>
+                        </div>
+                        <!-- Always visible fallbacks -->
+                        <div class="exam-row show-in">
+                            <span class="exam-badge badge-ssc" style="background:rgba(201,168,76,0.15);color:var(--gold)">Bank</span>
+                            <div class="exam-info">
+                                <div class="exam-name">Banking Exams</div>
+                                <div class="exam-desc">IBPS, SBI PO, RBI — vocabulary and reading comprehension.</div>
+                            </div>
+                        </div>
+                        <div class="exam-row show-bd">
+                            <span class="exam-badge badge-ssc" style="background:rgba(201,168,76,0.15);color:var(--gold)">Bank</span>
+                            <div class="exam-info">
+                                <div class="exam-name">Banking Exams</div>
+                                <div class="exam-desc">Sonali, Janata, BB AD — vocabulary and comprehension.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-            <!-- loader -->
-            <div id="loader" class="loader" aria-live="polite">
-                <div class="loader-dots"><span></span><span></span><span></span></div>
-                <p>Fetching today's content…</p>
-            </div>
+                <!-- How to Use -->
+                <div class="sb-card">
+                    <div class="sb-title">📅 Daily Study Plan</div>
+                    <div class="step-list">
+                        <div class="step-row">
+                            <div class="step-num">1</div>
+                            <div class="step-text">
+                                <strong>Word of the Day</strong> — Read the definition, phonetic, example sentence, and synonyms. Hear the pronunciation.
+                            </div>
+                        </div>
+                        <div class="step-row">
+                            <div class="step-num">2</div>
+                            <div class="step-text">
+                                <strong>10 Daily Vocab</strong> — Skim all 10 words. Notice which ones appear in the editorial article. Context = retention.
+                            </div>
+                        </div>
+                        <div class="step-row">
+                            <div class="step-num">3</div>
+                            <div class="step-text">
+                                <strong>Read the Article</strong> — Spot today's vocab in real editorial sentences. Builds reading speed for exams.
+                            </div>
+                        </div>
+                        <div class="step-row">
+                            <div class="step-num">4</div>
+                            <div class="step-text">
+                                <strong>Daily Quiz</strong> — Q1 is always a real PYQ. Get 7+/10 before you move on. Use the app for XP + streak.
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-            <!-- tab panels -->
-            <div id="panel-vocab"    class="tab-panel active"></div>
-            <div id="panel-articles" class="tab-panel"></div>
-            <div id="panel-quiz"     class="tab-panel"></div>
-        </section>
+                <!-- What's New -->
+                <div class="sb-card">
+                    <div class="sb-title">🆕 What's New</div>
+                    <div class="timeline">
+                        <div class="tl-row">
+                            <div class="tl-dot new"></div>
+                            <div class="tl-text">
+                                <span class="tl-tag">v2.0</span>
+                                <strong style="color:var(--cream)">Exam Source Badges</strong> — every word and quiz question now shows its verified exam origin (UPSC 2025, SSC 2023, BCS 39…)
+                            </div>
+                        </div>
+                        <div class="tl-row">
+                            <div class="tl-dot new"></div>
+                            <div class="tl-text">
+                                <span class="tl-tag">v2.0</span>
+                                <strong style="color:var(--cream)">Q1 Always a PYQ</strong> — Question 1 in the daily quiz is always a verified Previous Year Question, exact wording.
+                            </div>
+                        </div>
+                        <div class="tl-row">
+                            <div class="tl-dot"></div>
+                            <div class="tl-text">
+                                <span class="tl-tag">v1.9</span>
+                                Google Sign-In account sync — no more duplicate progress across devices.
+                            </div>
+                        </div>
+                        <div class="tl-row">
+                            <div class="tl-dot"></div>
+                            <div class="tl-text">
+                                <span class="tl-tag">v1.8</span>
+                                Daily Missions with XP — 30 XP available every day.
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        <!-- ── APP FEATURES SECTION ──────────────────────────────────────── -->
+            </aside>
+
+            <!-- ═══════════════════════════════════════════════════════
+                 MAIN CONTENT — unchanged from original
+                 ═══════════════════════════════════════════════════════ -->
+            <div class="main-content">
+
+                <!-- ── HERO WORD OF THE DAY ──────────────────────────── -->
+                <section class="wod-section">
+                    <div class="wod-header-flex">
+                        <div class="wod-eyebrow">Word of the Day</div>
+                        <div id="date-selector" class="date-selector"></div>
+                    </div>
+                    <div id="wod-card" class="wod-card">
+                        <div class="wod-skeleton">
+                            <div class="skel skel-title"></div>
+                            <div class="skel skel-sub"></div>
+                            <div class="skel skel-body"></div>
+                            <div class="skel skel-body short"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ── TABS ──────────────────────────────────────────── -->
+                <section class="tabs-section">
+                    <div class="tabs-bar">
+                        <button class="tab-btn active" data-tab="vocab">
+                            <span class="tab-icon">📚</span>
+                            <span>10 Daily Vocab</span>
+                        </button>
+                        <button class="tab-btn" data-tab="articles">
+                            <span class="tab-icon">📰</span>
+                            <span>Articles</span>
+                        </button>
+                        <button class="tab-btn" data-tab="quiz">
+                            <span class="tab-icon">✏️</span>
+                            <span>Quiz</span>
+                        </button>
+                    </div>
+                    <div id="loader" class="loader" aria-live="polite">
+                        <div class="loader-dots"><span></span><span></span><span></span></div>
+                        <p>Fetching today's content…</p>
+                    </div>
+                    <div id="panel-vocab"    class="tab-panel active"></div>
+                    <div id="panel-articles" class="tab-panel"></div>
+                    <div id="panel-quiz"     class="tab-panel"></div>
+                </section>
+
+            </div><!-- /.main-content -->
+
+            <!-- ═══════════════════════════════════════════════════════
+                 RIGHT SIDEBAR — Stats, missions, PYQ explain, download
+                 ═══════════════════════════════════════════════════════ -->
+            <aside class="sidebar sidebar-right">
+
+                <!-- App Stats -->
+                <div class="sb-card sb-mobile-show">
+                    <div class="sb-title">📊 App Stats</div>
+                    <div class="stat-grid">
+                        <div class="stat-box">
+                            <div class="stat-num">106K+</div>
+                            <div class="stat-lbl">Aspirants</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-num">4.8★</div>
+                            <div class="stat-lbl">Play Store</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-num">2</div>
+                            <div class="stat-lbl">Regions</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-num">10</div>
+                            <div class="stat-lbl">Words/Day</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Daily Missions -->
+                <div class="sb-card">
+                    <div class="sb-title">🎯 Daily Missions</div>
+                    <div class="mission-list">
+                        <div class="mission-row">
+                            <span style="font-size:0.9rem">📖</span>
+                            <span class="mission-label">Word Quiz</span>
+                            <span class="mission-xp">+5 XP</span>
+                        </div>
+                        <div class="mission-row">
+                            <span style="font-size:0.9rem">✏️</span>
+                            <span class="mission-label">Quiz of the Day</span>
+                            <span class="mission-xp">+10 XP</span>
+                        </div>
+                        <div class="mission-row">
+                            <span style="font-size:0.9rem">📚</span>
+                            <span class="mission-label">Vocab Quiz</span>
+                            <span class="mission-xp">+10 XP</span>
+                        </div>
+                        <div class="mission-row">
+                            <span style="font-size:0.9rem">🎁</span>
+                            <span class="mission-label">Bonus Challenge</span>
+                            <span class="mission-xp">+5 XP</span>
+                        </div>
+                    </div>
+                    <div class="mission-total">Up to <strong>30 XP</strong> daily · Track in the App</div>
+                </div>
+
+                <!-- PYQ Source Explained -->
+                <div class="sb-card">
+                    <div class="sb-title">🏅 Source Badges</div>
+                    <div class="pyq-explain">
+                        <p>
+                            <span class="pyq-tag gold">BCS 39</span> — exact Previous Year Question from the 39th BCS exam, verbatim wording.
+                        </p>
+                        <p>
+                            <span class="pyq-tag blue">editorial+SSC 2023</span> — today's editorial word also appeared in SSC 2023, so it's doubly important to learn.
+                        </p>
+                        <p style="margin-top:8px; font-size:0.72rem; color:var(--text-mute);">
+                            Q1 in every daily quiz is always a genuine PYQ. Questions 2–10 are editorial words, some with exam links.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Source Newspapers -->
+                <div class="sb-card">
+                    <div class="sb-title">📰 Source Newspapers</div>
+                    <div class="source-list">
+                        <div class="source-row show-in">
+                            <span class="source-flag">🇮🇳</span>
+                            <div class="source-info">
+                                <div class="source-name">The Hindu</div>
+                                <div class="source-sub">Editorial page — daily since 1878</div>
+                            </div>
+                            <span class="source-tag">UPSC</span>
+                        </div>
+                        <div class="source-row show-in">
+                            <span class="source-flag">🇮🇳</span>
+                            <div class="source-info">
+                                <div class="source-name">Times of India</div>
+                                <div class="source-sub">Op-ed & editorial columns</div>
+                            </div>
+                            <span class="source-tag">SSC</span>
+                        </div>
+                        <div class="source-row show-bd">
+                            <span class="source-flag">🇧🇩</span>
+                            <div class="source-info">
+                                <div class="source-name">The Daily Star</div>
+                                <div class="source-sub">Bangladesh's leading English daily</div>
+                            </div>
+                            <span class="source-tag">BCS</span>
+                        </div>
+                        <div class="source-row show-bd">
+                            <span class="source-flag">🇧🇩</span>
+                            <div class="source-info">
+                                <div class="source-name">The Financial Express</div>
+                                <div class="source-sub">Business & policy editorials</div>
+                            </div>
+                            <span class="source-tag">PSC</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Premium -->
+                <div class="sb-card">
+                    <div class="sb-title">💎 Premium Features</div>
+                    <div class="step-list">
+                        <div class="step-row">
+                            <div class="step-num" style="background:rgba(201,168,76,0.2);">✓</div>
+                            <div class="step-text"><strong>Ad-Free</strong> — zero interruptions while studying</div>
+                        </div>
+                        <div class="step-row">
+                            <div class="step-num" style="background:rgba(201,168,76,0.2);">✓</div>
+                            <div class="step-text"><strong>Full History</strong> — browse all past vocab and WOTD</div>
+                        </div>
+                        <div class="step-row">
+                            <div class="step-num" style="background:rgba(201,168,76,0.2);">✓</div>
+                            <div class="step-text"><strong>Analytics</strong> — track your accuracy, streak, and weak spots</div>
+                        </div>
+                        <div class="step-row">
+                            <div class="step-num" style="background:rgba(201,168,76,0.2);">✓</div>
+                            <div class="step-text"><strong>Lifetime access</strong> — one payment, no subscription</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mini Download CTA -->
+                <div class="sb-download">
+                    <div class="sb-download-title">Study Smarter on Mobile</div>
+                    <div class="sb-download-sub">XP · Streaks · Leaderboard · Offline Mode</div>
+                    <a class="sb-download-btn" href="https://play.google.com/store/apps/details?id=megaminds.dailyeditorialword" target="_blank" rel="noopener">
+                        ↓ Get on Google Play
+                    </a>
+                </div>
+
+                <!-- Visitor count (right sidebar) -->
+                <div class="sb-card" style="text-align:center;">
+                    <div class="sb-title">👁️ Live Learners</div>
+                    <div class="visitor-stats" style="margin:0;border:none;background:none;padding:0;flex-direction:column;gap:4px;">
+                        <span class="visitor-icon">👁️</span>
+                        <span id="visitor-count">Loading…</span>
+                    </div>
+                </div>
+
+            </aside><!-- /.sidebar-right -->
+
+        </div><!-- /.page-layout -->
+
+        <!-- ── APP FEATURES SECTION — full width ──────────────────── -->
         <section class="features-section">
             <div class="container">
                 <div class="features-eyebrow">Mastery Features</div>
@@ -110,19 +835,24 @@
                             <p>Daily analysis of The Hindu & Daily Star editorials with dual-language support.</p>
                         </div>
                         <div class="feature-card">
+                            <div class="feature-icon">🏅</div>
+                            <h3>Real PYQ Each Day</h3>
+                            <p>Q1 in every quiz is a genuine Previous Year Question from UPSC, SSC, BCS, or PSC — exact exam wording.</p>
+                        </div>
+                        <div class="feature-card">
                             <div class="feature-icon">📚</div>
                             <h3>Smart Vocab</h3>
-                            <p>10 context-based words daily with synonyms, antonyms, and native meanings.</p>
+                            <p>10 context-based words daily with synonyms, antonyms, and native meanings in Bengali or Hindi.</p>
                         </div>
                         <div class="feature-card">
                             <div class="feature-icon">✏️</div>
                             <h3>Adaptive Quizzes</h3>
-                            <p>Exam-style MCQs designed for UPSC, SSC, BCS, and Banking aspirants.</p>
+                            <p>Exam-style MCQs designed for UPSC, SSC, BCS, and Banking aspirants. Source-tagged for trust.</p>
                         </div>
                         <div class="feature-card">
                             <div class="feature-icon">🎮</div>
                             <h3>Gamified Learning</h3>
-                            <p>Earn XP, complete daily missions, and maintain streaks to stay motivated.</p>
+                            <p>Earn XP, complete daily missions, and maintain streaks to stay motivated every day.</p>
                         </div>
                         <div class="feature-card">
                             <div class="feature-icon">🏆</div>
@@ -134,6 +864,11 @@
                             <h3>Offline Mastery</h3>
                             <p>Save important words and articles to study even without an internet connection.</p>
                         </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🔔</div>
+                            <h3>Daily Reminders</h3>
+                            <p>Push notifications at your preferred time. Never miss a Word of the Day again.</p>
+                        </div>
                     </div>
                     <button class="carousel-nav next" id="features-next" aria-label="Next">❯</button>
                 </div>
@@ -141,7 +876,7 @@
             </div>
         </section>
 
-        <!-- ── DOWNLOAD BANNER ───────────────────────────────────────────── -->
+        <!-- ── DOWNLOAD BANNER — full width ───────────────────────── -->
         <section class="download-banner">
             <div class="download-inner">
                 <div class="download-text">
@@ -153,7 +888,6 @@
                     <a class="download-btn" href="https://play.google.com/store/apps/details?id=megaminds.dailyeditorialword" target="_blank" rel="noopener">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Get it on Google Play" width="180">
                     </a>
-                    <!-- App icon with Play Store link -->
                     <a id="app-icon-link" href="https://play.google.com/store/apps/details?id=megaminds.dailyeditorialword" target="_blank" rel="noopener" class="app-icon-download-link">
                         <img id="app-icon-img" src="" alt="Editorial Vocab App Icon" width="120">
                     </a>
@@ -163,7 +897,7 @@
 
     </main>
 
-    <!-- ── FOOTER ─────────────────────────────────────────────────────────── -->
+    <!-- ── FOOTER ──────────────────────────────────────────────────── -->
     <footer class="site-footer">
         <div class="footer-inner">
             <div class="footer-brand">
@@ -194,10 +928,6 @@
         </div>
         <div class="footer-bottom">
             <p>© 2024–2026 Mahadi Hasan · Tangail, Bangladesh · <a href="mailto:mahadi129727@gmail.com">mahadi129727@gmail.com</a></p>
-            <div class="visitor-stats">
-                <span class="visitor-icon">👁️</span>
-                <span id="visitor-count">Loading stats...</span>
-            </div>
         </div>
     </footer>
 
@@ -205,5 +935,31 @@
     <button id="back-top" aria-label="Back to top" title="Back to top">↑</button>
 
     <script src="app.js"></script>
+
+    <!-- Region class on body for CSS show/hide — runs after app.js sets region -->
+    <script>
+    (function patchRegion() {
+        // Apply body class whenever region changes so sidebar content is region-aware
+        const orig = window.setRegion;
+        function applyBodyClass(reg) {
+            document.body.classList.remove('region-in', 'region-bd');
+            document.body.classList.add(reg === 'BD' ? 'region-bd' : 'region-in');
+        }
+        // Patch after DOMContentLoaded (app.js uses DOMContentLoaded too)
+        document.addEventListener('DOMContentLoaded', () => {
+            // Wrap the global setRegion defined in app.js
+            const _orig = window.setRegion;
+            if (typeof _orig === 'function') {
+                window.setRegion = function(reg) {
+                    _orig(reg);
+                    applyBodyClass(reg);
+                };
+            }
+            // Default on load
+            const picker = document.getElementById('region-picker');
+            if (picker) applyBodyClass(picker.value || 'IN');
+        });
+    })();
+    </script>
 </body>
 </html>
