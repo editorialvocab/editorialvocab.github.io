@@ -344,9 +344,9 @@ function renderSocialLinks() {
 
     const links = {
         BD: {
-            fb:    "https://www.facebook.com/editorialvocabappbd",   // ← FIXED (was editorialvocabapp)
-            yt:    "https://www.youtube.com/@EditorialVocabAppBD",
-            ig:    "https://www.instagram.com/editorialvocabappbd",  // ← FIXED (was hardcoded India)
+            fb:    "https://www.facebook.com/editorialvocabappbd",   
+            yt:    "https://www.youtube.com/@editorialvocabappbd",
+            ig:    "https://www.instagram.com/editorialvocabappbd",  
             label: "(Bangladesh)",
         },
         IN: {
