@@ -13,10 +13,10 @@ document.write(`
 							destination for the latest updates, insights, and trends in the ever-evolving world
 							of Android.</p>
 						<h3 align="left">Connect with me:</h3>
-						<p align="left" ><a  href="https://github.com/promahadihasan" target="_blank"><img
+						<p align="left" ><a  href="https://github.com/editorialvocab" target="_blank"><img
 									align="center"
-									src="https://raw.githubusercontent.com/promahadihasan/promahadihasan/main/files/github_icon.svg"
-									alt="promahadihasan" height="30" width="40"></a> <a
+									src="https://raw.githubusercontent.com/editorialvocab/editorialvocab/main/files/github_icon.svg"
+									alt="editorialvocab" height="30" width="40"></a> <a
 								href="https://linkedin.com/in/promahadihasan" target="_blank"><img
 									align="center"
 									src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg"
@@ -31,11 +31,11 @@ document.write(`
 						<p align="left"><a
 								href="https://play.google.com/store/apps/details?id=theoaktroop.appoframadan"
 								target="_blank"><img align="center"
-									src="https://raw.githubusercontent.com/promahadihasan/promahadihasan/main/files/muslimDay.svg"
+									src="https://raw.githubusercontent.com/editorialvocab/editorialvocab/main/files/muslimDay.svg"
 									alt="Muslims Day" height="30" width="40"></a> <a
 								href="https://play.google.com/store/apps/details?id=megaminds.dailyeditorialword"
 								target="_blank"><img align="center"
-									src="https://raw.githubusercontent.com/promahadihasan/promahadihasan/main/files/dailyEditorial.svg"
+									src="https://raw.githubusercontent.com/editorialvocab/editorialvocab/main/files/dailyEditorial.svg"
 									alt="Daily Editorial &amp; Vocabulary" height="30" width="40"></a></p>
 					
 					<div class="mycontainer_with_horizontal_fotter">
@@ -51,7 +51,7 @@ document.write(`
 											<a href="https://muslimsday.com/" target="_blank">Muslim Day</a>
 										</li>
 										<li class="footerli">
-											<a href="https://promahadihasan.github.io" target="_blank">Crop Cash
+											<a href="https://editorialvocab.github.io" target="_blank">Crop Cash
 												App</a>
 										</li>
 									</ul>
@@ -64,20 +64,20 @@ document.write(`
 									<ul id="menu-mymainmenu" class="menu">
 										<li class="footerli" id="menu-item-68"
 											class="menu-item menu-item-type-custom menu-item-object-custom menu-item-68">
-											<a href="https://promahadihasan.github.io/blog">Blog Post</a>
+											<a href="https://editorialvocab.github.io/blog">Blog Post</a>
 										</li>
 										<li class="footerli"  id="menu-item-70"
 											class="menu-item menu-item-type-custom menu-item-object-custom menu-item-70">
-											<a href="https://promahadihasan.github.io/profile/">About me</a>
+											<a href="https://editorialvocab.github.io/profile/">About me</a>
 										</li>
 										<li class="footerli"  id="menu-item-7001"
 											class="menu-item menu-item-type-post_type menu-item-object-page menu-item-7001">
-											<a href="https://promahadihasan.github.io/terms-conditions/">Terms &
+											<a href="https://editorialvocab.github.io/terms-conditions/">Terms &
 												Conditions</a>
 										</li>
 										<li class="footerli"  id="menu-item-7002"
 											class="menu-item menu-item-type-post_type menu-item-object-page menu-item-7002">
-											<a href="https://promahadihasan.github.io/privacy-policy/">Privacy
+											<a href="https://editorialvocab.github.io/privacy-policy/">Privacy
 												Policy</a>
 										</li>
 									</ul>

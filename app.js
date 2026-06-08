@@ -177,7 +177,7 @@ function injectWordSchema() {
         "inDefinedTermSet": {
             "@type": "DefinedTermSet",
             "name": "Editorial Vocabulary — Daily Word",
-            "url": "https://promahadihasan.github.io/editroail_app/",
+            "url": "https://editorialvocab.github.io/editorial_app/",
         },
         "termCode": state.dates.searchDate,
     };
@@ -346,7 +346,7 @@ function renderSocialLinks() {
         BD: {
             fb:    "https://www.facebook.com/editorialvocabappbd",   
             yt:    "https://www.youtube.com/@editorialvocabappbd",
-            ig:    "https://www.instagram.com/editorialvocabappbd",  
+            ig:    "https://www.instagram.com/editorialvocabappbd",
             label: "(Bangladesh)",
         },
         IN: {
