@@ -1,141 +1,232 @@
-document.write(`
-<footer class="w3-container footer">
-	<div class="footer-top-area">
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-4 col-xs-12">
-					<div id="rdtheme_about-2" class="widget widget_rdtheme_about">
-						<h3 class="widgettitle footerP">Mahadi Hasan (Professional Android App Developer Java+Kotlin)
-						</h3>
-						<p class="footerP"> Welcome back, my friends! I am Mahadi Hasan, an experienced Google
-							Android developer with a decade of expertise under my belt. It's my pleasure to have
-							you join me on this exciting app development journey. My blog is your one-stop
-							destination for the latest updates, insights, and trends in the ever-evolving world
-							of Android.</p>
-						<h3 align="left">Connect with me:</h3>
-						<p align="left" ><a  href="https://github.com/editorialvocab" target="_blank"><img
-									align="center"
-									src="https://raw.githubusercontent.com/editorialvocab/editorialvocab/main/files/github_icon.svg"
-									alt="editorialvocab" height="30" width="40"></a> <a
-								href="https://linkedin.com/in/promahadihasan" target="_blank"><img
-									align="center"
-									src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg"
-									alt="promahadihasan" height="30" width="40"></a> <a
-								href="https://twitter.com/promahadihasan" target="_blank"><img align="center"
-									src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/twitter.svg"
-									alt="promahadihasan" height="30" width="40"></a> <a
-								href="https://instagram.com/promahadihasan" target="_blank"><img align="center"
-									src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/instagram.svg"
-									alt="promahadihasan" height="30" width="40"></a></p>
-						<h3 align="left">Android Apps on Google Play Store:</h3>
-						<p align="left"><a
-								href="https://play.google.com/store/apps/details?id=theoaktroop.appoframadan"
-								target="_blank"><img align="center"
-									src="https://raw.githubusercontent.com/editorialvocab/editorialvocab/main/files/muslimDay.svg"
-									alt="Muslims Day" height="30" width="40"></a> <a
-								href="https://play.google.com/store/apps/details?id=megaminds.dailyeditorialword"
-								target="_blank"><img align="center"
-									src="https://raw.githubusercontent.com/editorialvocab/editorialvocab/main/files/dailyEditorial.svg"
-									alt="Daily Editorial &amp; Vocabulary" height="30" width="40"></a></p>
-					
-					<div class="mycontainer_with_horizontal_fotter">
-							<div>
-								<h3 align="left">Take an overview on my project website:</h3>
-								<div >
-									<ul>
-										<li class="footerli">
-											<a href="editroail_app/index.html" target="_blank">Daily Editorial &
-												Vocabulary</a>
-										</li>
-										<li class="footerli">
-											<a href="https://muslimsday.com/" target="_blank">Muslim Day</a>
-										</li>
-										<li class="footerli">
-											<a href="https://editorialvocab.github.io" target="_blank">Crop Cash
-												App</a>
-										</li>
-									</ul>
-								</div>
-							</div>
-						<div class="col-sm-4 col-xs-12">
-							<div id="nav_menu-2" class="widget widget_nav_menu">
-								<h3 class="widgettitle">Important Links:</h3>
-								<div class="menu-mymainmenu-container">
-									<ul id="menu-mymainmenu" class="menu">
-										<li class="footerli" id="menu-item-68"
-											class="menu-item menu-item-type-custom menu-item-object-custom menu-item-68">
-											<a href="https://editorialvocab.github.io/blog">Blog Post</a>
-										</li>
-										<li class="footerli"  id="menu-item-70"
-											class="menu-item menu-item-type-custom menu-item-object-custom menu-item-70">
-											<a href="https://editorialvocab.github.io/profile/">About me</a>
-										</li>
-										<li class="footerli"  id="menu-item-7001"
-											class="menu-item menu-item-type-post_type menu-item-object-page menu-item-7001">
-											<a href="https://editorialvocab.github.io/terms-conditions/">Terms &
-												Conditions</a>
-										</li>
-										<li class="footerli"  id="menu-item-7002"
-											class="menu-item menu-item-type-post_type menu-item-object-page menu-item-7002">
-											<a href="https://editorialvocab.github.io/privacy-policy/">Privacy
-												Policy</a>
-										</li>
-									</ul>
-								</div>
-							</div>
-						</div>
-						<div id="contract">
-							<div id="rdtheme_info-2" class="widget widget_rdtheme_info">
-								<h3 class="widgettitle">Contact info:</h3>
-								<ul>
-									<li class="footerli" > Akur Takur Para, Tangail Sadar, Tangail, Bangladesh</li>
-									<li class="footerli" >
-										<a href="tel:+">+8801713819046</a>
-									</li>
-									<li class="footerli" >
-										<a href="mailto:mahadi129727@gmail.com">mahadi129727@gmail.com</a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					</div>
-				</div>
-			</div>
-			<div class="footer-bottom-area">
-				<div class="container">
-					<div class="row">
-						<div class="col-sm-12 col-xs-12 text-center">
-							<br>
-							<p align="center"><span class="footerForP">© Copyright Apps Developer Mahadi Hasan 2024. Designed and Developed by Mahadi
-							Hasan.</span></p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+/**
+ * footer.js — Editorial Vocabulary site footer
+ * Usage: <script src="/footer.js"></script>  (place at bottom of <body>)
+ *
+ * Renders a clean 3-column footer matching the main site's dark theme.
+ * Also injects a scroll-to-top button.
+ */
+(function () {
+    var BASE  = "https://editorialvocab.github.io";
+    var DOCS  = BASE + "/docs";
+    var APP   = "https://play.google.com/store/apps/details?id=megaminds.dailyeditorialword";
+    var YEAR  = new Date().getFullYear();
+
+    // ── Styles ───────────────────────────────────────────────────────
+    var css = `
+.ev-footer {
+    border-top: 1px solid #1e2840;
+    background: #060b18;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    padding: 48px 20px 24px;
+    margin-top: 64px;
+}
+.ev-footer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr 1fr;
+    gap: 40px;
+}
+.ev-footer-brand .ev-footer-logo {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #f0ece2;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+.ev-footer-brand .ev-footer-logo span { color: #c9a84c; }
+.ev-footer-tagline {
+    font-size: 0.78rem;
+    color: #4b5563;
+    font-style: italic;
+    margin-bottom: 14px;
+    line-height: 1.5;
+}
+.ev-footer-apps {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+}
+.ev-footer-apps a {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.72rem;
+    color: #6b7280;
+    border: 1px solid #1e2840;
+    border-radius: 6px;
+    padding: 4px 10px;
+    text-decoration: none;
+    transition: border-color .15s, color .15s;
+}
+.ev-footer-apps a:hover { border-color: #c9a84c; color: #c9a84c; }
+.ev-footer-social {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.ev-footer-social a {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.7rem;
+    color: #4b5563;
+    text-decoration: none;
+    transition: color .15s;
+}
+.ev-footer-social a:hover { color: #c9a84c; }
+
+.ev-footer-col h4 {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #6b7280;
+    margin-bottom: 14px;
+}
+.ev-footer-col a {
+    display: block;
+    font-size: 0.8rem;
+    color: #4b5563;
+    text-decoration: none;
+    margin-bottom: 8px;
+    transition: color .15s;
+}
+.ev-footer-col a:hover { color: #c9a84c; }
+
+.ev-footer-bottom {
+    max-width: 1100px;
+    margin: 32px auto 0;
+    padding-top: 20px;
+    border-top: 1px solid #1e2840;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 0.72rem;
+    color: #374151;
+}
+.ev-footer-bottom a { color: #4b5563; text-decoration: none; }
+.ev-footer-bottom a:hover { color: #c9a84c; }
+
+/* Scroll-to-top button */
+#ev-back-top {
+    position: fixed;
+    bottom: 28px;
+    right: 24px;
+    width: 40px;
+    height: 40px;
+    background: #c9a84c;
+    color: #0a0f1e;
+    border: none;
+    border-radius: 50%;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+    transition: background .15s, transform .15s;
+    z-index: 999;
+}
+#ev-back-top.ev-visible { display: flex; }
+#ev-back-top:hover { background: #d4b96a; transform: translateY(-2px); }
+
+@media (max-width: 768px) {
+    .ev-footer-inner { grid-template-columns: 1fr 1fr; gap: 28px; }
+}
+@media (max-width: 480px) {
+    .ev-footer-inner { grid-template-columns: 1fr; }
+}
+`;
+
+    // ── Build HTML ───────────────────────────────────────────────────
+    var html = `
+<footer class="ev-footer">
+  <div class="ev-footer-inner">
+
+    <!-- Brand column -->
+    <div class="ev-footer-brand">
+      <a class="ev-footer-logo" href="${BASE}/">
+        📖 Editorial <span>Vocab</span>
+      </a>
+      <p class="ev-footer-tagline">"Don't just read editorials — master them."</p>
+      <div class="ev-footer-apps">
+        <a href="${APP}" target="_blank" rel="noopener">📱 Google Play</a>
+        <a href="https://muslimsday.com/" target="_blank" rel="noopener">🕌 Muslims Day</a>
+      </div>
+      <div class="ev-footer-social">
+        <a href="https://github.com/editorialvocab" target="_blank" rel="noopener">⌥ GitHub</a>
+        <a href="https://linkedin.com/in/promahadihasan" target="_blank" rel="noopener">in LinkedIn</a>
+        <a href="https://twitter.com/promahadihasan" target="_blank" rel="noopener">𝕏 Twitter</a>
+        <a href="https://instagram.com/promahadihasan" target="_blank" rel="noopener">◎ Instagram</a>
+      </div>
+    </div>
+
+    <!-- Vocabulary column -->
+    <div class="ev-footer-col">
+      <h4>Vocabulary</h4>
+      <a href="${DOCS}/words/">All Words</a>
+      <a href="${DOCS}/bcs-vocabulary/">BCS Archive</a>
+      <a href="${DOCS}/upsc-vocabulary/">UPSC Archive</a>
+    </div>
+
+    <!-- Links column -->
+    <div class="ev-footer-col">
+      <h4>Links</h4>
+      <a href="${BASE}/">Home</a>
+      <a href="${BASE}/profile/">About Mahadi</a>
+      <a href="${BASE}/blog/">Blog</a>
+      <a href="${BASE}/privacy-policy/">Privacy Policy</a>
+      <a href="${BASE}/terms-conditions/">Terms</a>
+    </div>
+
+    <!-- Contact column -->
+    <div class="ev-footer-col" id="contract">
+      <h4>Contact</h4>
+      <a href="mailto:mahadi129727@gmail.com">mahadi129727@gmail.com</a>
+      <a href="tel:+8801713819046">+880 1713 819046</a>
+      <a href="${BASE}/profile/" style="color:#4b5563;font-size:0.72rem;margin-top:4px;">
+        Akur Takur Para, Tangail Sadar,<br>Tangail, Bangladesh
+      </a>
+    </div>
+
+  </div>
+
+  <div class="ev-footer-bottom">
+    <span>© ${YEAR} Editorial Vocabulary · Mahadi Hasan · Tangail, Bangladesh</span>
+    <span>
+      <a href="${BASE}/privacy-policy/">Privacy</a> ·
+      <a href="${BASE}/terms-conditions/">Terms</a> ·
+      <a href="${APP}" target="_blank" rel="noopener">App</a>
+    </span>
+  </div>
 </footer>
-<button onclick="topFunction()" id="myBtn" title="Go to top">^</button>
-<script>
-// Get the button
-let mybutton = document.getElementById("myBtn");
 
-// When the user scrolls down 20px from the top of the document, show the button
-window.onscroll = function() {scrollFunction()};
+<button id="ev-back-top" aria-label="Back to top" title="Back to top">↑</button>`;
 
-function scrollFunction() {
-  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-    mybutton.style.display = "block";
-  } else {
-    mybutton.style.display = "none";
-  }
-}
+    // ── Inject styles + markup ───────────────────────────────────────
+    var styleEl = document.createElement("style");
+    styleEl.textContent = css;
+    document.head.appendChild(styleEl);
 
-// When the user clicks on the button, scroll to the top of the document
-function topFunction() {
-  document.body.scrollTop = 0;
-  document.documentElement.scrollTop = 0;
-}
-</script>
-`);
+    document.write(html);
+
+    // ── Scroll-to-top logic ──────────────────────────────────────────
+    window.addEventListener("load", function () {
+        var btn = document.getElementById("ev-back-top");
+        if (!btn) return;
+        window.addEventListener("scroll", function () {
+            btn.classList.toggle("ev-visible", window.scrollY > 300);
+        }, { passive: true });
+        btn.addEventListener("click", function () {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+    });
+})();

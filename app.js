@@ -76,7 +76,31 @@ async function detectRegion() {
 function setRegion(reg) {
     state.region = reg;
     state.suffix = reg === "BD" ? "EnToBn" : "EnToHn";
+    try { localStorage.setItem('editorial_region', reg); } catch(e) {}
     updateBrandUI();
+    // Update "Today's Word" button URL whenever region changes
+    _updateTodaysWordBtn();
+}
+
+// ── Today's Word URL builder ──────────────────────────────────────
+function _todaysWordUrl() {
+    const { daily } = state.dates;
+    const lang = state.region === "BD" ? "bn" : "hn";
+    return `https://editorialvocab.github.io/docs/words/${daily}/${lang}/`;
+}
+
+function _updateTodaysWordBtn() {
+    const url = _todaysWordUrl();
+    // Update inline button (index.html wod-section)
+    const btn = document.getElementById("todays-word-btn");
+    if (btn) btn.href = url;
+    // Update inline nav link (index.html top-nav)
+    const nav = document.getElementById("todays-word-nav");
+    if (nav) nav.href = url;
+    // Update header.js injected link (all pages using header.js)
+    if (typeof updateHeaderWordLink === "function") {
+        updateHeaderWordLink(state.dates.daily, state.region === "BD" ? "bn" : "hn");
+    }
 }
 
 function updateBrandUI() {
@@ -131,6 +155,7 @@ async function loadAll(isRetry = false) {
     renderAppDownloadIcon();
     renderSocialLinks();
     renderDatePicker();
+    _updateTodaysWordBtn();
 
     // ── SEO: update page title + meta when word loads ─────────────
     updatePageMeta();
