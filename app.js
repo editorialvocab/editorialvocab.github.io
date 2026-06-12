@@ -48,6 +48,7 @@ async function fetchJSON(url) {
 // ── Init ──────────────────────────────────────────────────────────
 async function init() {
     buildDates();
+    setRegion(state.region); // Immediate URL & UI sync with default (IN)
     bindUI();
     initFeaturesCarousel();
     await detectRegion();
@@ -63,13 +64,13 @@ async function detectRegion() {
         setTimeout(() => ctrl.abort(), 2500);
         const r    = await fetch("https://ipwho.is/", { signal: ctrl.signal });
         const info = await r.json();
-        if (info?.country_code === "BD") {
-            setRegion("BD");
-            document.getElementById("region-picker").value = "BD";
-        } else {
-            setRegion("IN");
-        }
-    } catch { /* default IN */ }
+        const reg  = info?.country_code === "BD" ? "BD" : "IN";
+        setRegion(reg);
+        const picker = document.getElementById("region-picker");
+        if (picker) picker.value = reg;
+    } catch { 
+        setRegion("IN"); // Ensure links are updated even if IP detection fails
+    }
     statusEl.textContent = state.region === "BD" ? "🇧🇩 Bangladesh" : "🇮🇳 India";
 }
 
