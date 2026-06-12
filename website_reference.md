@@ -303,7 +303,7 @@ update_sitemap()
 |---|---|---|
 | `GITHUB_PAGES_REPO` | `https://github.com/editorialvocab/editorialvocab.github.io.git` | Target repo |
 | `GITHUB_PAGES_TOKEN` | GitHub PAT | Needs `repo` write scope |
-| `GITHUB_PAGES_BRANCH` | `main` | Default |
+| `GITHUB_PAGES_BRANCH` | `VSCode` | Default |
 | `GITHUB_PAGES_TARGET_PATH` | `""` (empty string) | ⚠️ Must be empty so pages go to repo root, not `/docs/docs/` |
 
 **⚠️ Critical:** If `GITHUB_PAGES_TARGET_PATH` is set to `"docs"` the generated files land at `/docs/docs/words/…` which is the wrong URL. Set it to empty string `""`.
