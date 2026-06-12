@@ -89,15 +89,25 @@ function _todaysWordUrl() {
     return `https://editorialvocab.github.io/docs/words/${daily}/${lang}/`;
 }
 
+function _todaysQuizUrl() {
+    const { daily } = state.dates;
+    const lang = state.region === "BD" ? "bn" : "hn";
+    return `https://editorialvocab.github.io/docs/quiz/${daily}/${lang}/`;
+}
+
 function _updateTodaysWordBtn() {
-    const url = _todaysWordUrl();
-    // Update inline button (index.html wod-section)
-    const btn = document.getElementById("todays-word-btn");
-    if (btn) btn.href = url;
-    // Update inline nav link (index.html top-nav)
+    const wordUrl = _todaysWordUrl();
+    const quizUrl = _todaysQuizUrl();
+
+    const wordBtn = document.getElementById("todays-word-btn");
+    if (wordBtn) wordBtn.href = wordUrl;
+
+    const quizBtn = document.getElementById("todays-quiz-btn");
+    if (quizBtn) quizBtn.href = quizUrl;
+
     const nav = document.getElementById("todays-word-nav");
-    if (nav) nav.href = url;
-    // Update header.js injected link (all pages using header.js)
+    if (nav) nav.href = wordUrl;
+
     if (typeof updateHeaderWordLink === "function") {
         updateHeaderWordLink(state.dates.daily, state.region === "BD" ? "bn" : "hn");
     }
