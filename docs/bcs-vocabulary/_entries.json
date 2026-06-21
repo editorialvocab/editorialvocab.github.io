@@ -1,194 +1,58 @@
 [
   {
-    "word": "White elephant",
-    "meaning": "দামি কিন্তু অকেজো বস্তু",
-    "definition": "দামি কিন্তু অকেজো বস্তু",
-    "source": "26th BCS",
-    "date": "09-06-2026",
-    "lang": "bn"
-  },
-  {
-    "word": "Frugal",
-    "meaning": "মিতব্যয়ী",
-    "definition": "Avoiding unnecessary expenditure either of money or of anything else which is to be used or consumed; avoiding waste.",
-    "source": "BCS 37",
-    "date": "10-06-2026",
-    "lang": "bn"
-  },
-  {
-    "word": "Laconic",
-    "meaning": "অল্পভাষী",
-    "definition": "Using as few words as possible; pithy and concise.",
-    "source": "BCS 34",
-    "date": "11-06-2026",
-    "lang": "bn"
-  },
-  {
-    "word": "Magnanimous",
-    "meaning": "মহানুভব",
-    "definition": "Noble and generous in spirit.",
-    "source": "BCS 43",
-    "date": "12-06-2026",
-    "lang": "bn"
-  },
-  {
-    "word": "Once in a blue moon",
-    "meaning": "খুবই কদাচিৎ / খুব কম দেখা যায় এমন",
-    "definition": "খুবই কদাচিৎ / খুব কম দেখা যায় এমন",
-    "source": "38th BCS",
-    "date": "01-06-2026",
-    "lang": "bn"
-  },
-  {
-    "word": "Incite",
-    "meaning": "উস্কানি দেওয়া / উত্তেজিত করা",
-    "definition": "To stir up or excite; to rouse or goad into action.",
-    "source": "11th BCS",
-    "date": "02-06-2026",
-    "lang": "bn"
-  },
-  {
-    "word": "Indigenous",
-    "meaning": "দেশীয় বা স্বদেশী",
-    "definition": "Born or originating in, native to a land or region, especially before an intrusion.",
-    "source": "BCS 36",
-    "date": "03-06-2026",
-    "lang": "bn"
-  },
-  {
-    "word": "Shorten",
-    "meaning": "সংক্ষিপ্ত করা (Verb form of Short/Shortly)",
-    "definition": "To make shorter; to abbreviate.",
-    "source": "28th BCS",
-    "date": "04-06-2026",
-    "lang": "bn"
-  },
-  {
-    "word": "Take into account",
-    "meaning": "বিবেচনা করা",
-    "definition": "বিবেচনা করা",
-    "source": "33rd BCS",
-    "date": "05-06-2026",
-    "lang": "bn"
-  },
-  {
-    "word": "Officious",
-    "meaning": "যে যেচে পরোপকার করতে গিয়ে বিরক্ত করে (অনধিকারচর্চাকারী)",
-    "definition": "Obliging, attentive, eager to please.",
-    "source": "14th BCS",
-    "date": "06-06-2026",
-    "lang": "bn"
-  },
-  {
-    "word": "Get across",
-    "meaning": "বুঝাতে পারা / বোধগম্য করা",
-    "definition": "বুঝাতে পারা / বোধগম্য করা",
-    "source": "32nd BCS",
-    "date": "07-06-2026",
-    "lang": "bn"
-  },
-  {
-    "word": "Altruism",
-    "meaning": "পরার্থপরতা",
-    "definition": "Regard for others, both natural and moral without regard for oneself; devotion to the interests of others; brotherly kindness.",
-    "source": "BCS 41",
-    "date": "08-06-2026",
-    "lang": "bn"
-  },
-  {
-    "word": "Amiable",
-    "meaning": "বন্ধুবৎসল",
-    "definition": "Friendly; kind; sweet; gracious; displaying a friendly and pleasant manner.",
-    "source": "BCS 34",
-    "date": "20-05-2026",
-    "lang": "bn"
-  },
-  {
-    "word": "Gullible",
-    "meaning": "সহজেইপ্রতারিত হয় এমন",
-    "definition": "Easily cheated, deceived, or tricked because they trust others too easily.",
-    "source": "24th BCS",
-    "date": "21-05-2026",
-    "lang": "bn"
-  },
-  {
-    "word": "Extempore",
-    "meaning": "পূর্বপ্রস্তুতিহীন / তাৎক্ষণিক",
-    "definition": "Spoken or done without any prior preparation or practice.",
-    "source": "47th BCS",
-    "date": "22-05-2026",
-    "lang": "bn"
-  },
-  {
-    "word": "Viable",
-    "meaning": "কার্যকর / টেকসই",
-    "definition": "Capable of working successfully; feasible or able to live and grow independently.",
-    "source": "24th BCS",
-    "date": "23-05-2026",
-    "lang": "bn"
-  },
-  {
-    "word": "Hold water",
-    "meaning": "যুক্তি বা পরীক্ষায় টিকে থাকা",
-    "definition": "To appear reasonable, valid, or logical when examined closely.",
-    "source": "11th BCS",
-    "date": "24-05-2026",
-    "lang": "bn"
-  },
-  {
-    "word": "Panegyric",
-    "meaning": "স্তুতিগাথা / উচ্চ প্রশংসা",
-    "definition": "A formal speech or opus publicly praising someone or something.",
-    "source": "38th BCS",
-    "date": "25-05-2026",
-    "lang": "bn"
-  },
-  {
-    "word": "Resilient",
-    "meaning": "স্থিতিস্থাপক বা সহনশীল",
-    "definition": "(of objects or substances) Returning quickly to original shape after force is applied; elastic. Also refers to people recovering quickly from adversity.",
-    "source": "BCS 41",
-    "date": "26-05-2026",
-    "lang": "bn"
-  },
-  {
-    "word": "Infringe",
-    "meaning": "আইন বা নিয়ম লঙ্ঘন করা (Transgress)",
-    "definition": "Break or violate a treaty, a law, a right etc.",
-    "source": "18th BCS",
-    "date": "27-05-2026",
-    "lang": "bn"
-  },
-  {
-    "word": "Scarcity",
-    "meaning": "অভাব বা দুষ্প্রাপ্যতা",
-    "definition": "The condition of something being scarce or deficient",
+    "word": "Vacillate",
+    "meaning": "দ্বিধা করা",
+    "definition": "To sway unsteadily from one side to the other; oscillate.",
     "source": "BCS 32",
-    "date": "28-05-2026",
+    "date": "15-06-2026",
     "lang": "bn"
   },
   {
-    "word": "Bull market",
-    "meaning": "শেয়ার বাজারের তেজি ভাব (যখন দাম বাড়ে)",
-    "definition": "A market in which share prices are rising, encouraging buying.",
-    "source": "17th BCS",
-    "date": "29-05-2026",
+    "word": "Three score",
+    "meaning": "ষাট (Score মানে বিশ)",
+    "definition": "ষাট (Score মানে বিশ)",
+    "source": "16th BCS",
+    "date": "16-06-2026",
     "lang": "bn"
   },
   {
-    "word": "Admit of",
-    "meaning": "অবকাশ থাকা / স্বীকৃতি দেওয়া",
-    "definition": "To allow or leave room for a certain interpretation, solution, or possibility.",
-    "source": "29th BCS",
-    "date": "30-05-2026",
+    "word": "The rich are...",
+    "meaning": "The + Adjective (যেমন: The rich/poor) সমষ্টিগত প্লুরাল হিসেবে কাজ করে",
+    "definition": "The + Adjective (যেমন: The rich/poor) সমষ্টিগত প্লুরাল হিসেবে কাজ করে",
+    "source": "11th BCS",
+    "date": "17-06-2026",
     "lang": "bn"
   },
   {
-    "word": "Ruminant",
-    "meaning": "জাবর কাটে এমন প্রাণী (Cud-chewing animal)",
-    "definition": "An artiodactyl ungulate mammal which chews cud, such as a cow or deer.",
-    "source": "22nd BCS",
-    "date": "31-05-2026",
+    "word": "Meticulous",
+    "meaning": "অতি সতর্ক বা খুঁতখুঁতে",
+    "definition": "Characterized by very precise, conscientious attention to details.",
+    "source": "BCS 36",
+    "date": "18-06-2026",
+    "lang": "bn"
+  },
+  {
+    "word": "Ordinance",
+    "meaning": "অধ্যাদেশ বা আইন",
+    "definition": "A local law",
+    "source": "16th BCS",
+    "date": "19-06-2026",
+    "lang": "bn"
+  },
+  {
+    "word": "Cattle",
+    "meaning": "গবাদি পশু (সমষ্টিবাচক বিশেষ্য)",
+    "definition": "Domesticated bovine animals (cows, bulls, steers etc).",
+    "source": "10th BCS",
+    "date": "20-06-2026",
+    "lang": "bn"
+  },
+  {
+    "word": "Appal",
+    "meaning": "আতঙ্কিত করা / মর্মাহত করা",
+    "definition": "To fill with horror; to dismay.",
+    "source": "40th BCS",
+    "date": "21-06-2026",
     "lang": "bn"
   }
 ]
