@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
 
+Disallow: /logs/
+Disallow: /EdData/
+
 Sitemap: https://editorialvocab.github.io/docs/sitemap.xml
