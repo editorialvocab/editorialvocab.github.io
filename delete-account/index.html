@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+    <title>Delete Your Account — Editorial Vocabulary</title>
+    <meta name="description" content="Request deletion of your Editorial Vocabulary account and associated data. Submitted requests are processed within 7 days.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://editorialvocab.github.io/delete-account/">
+    <meta name="theme-color" content="#0a0f1e">
+
+    <meta property="og:title" content="Delete Your Account — Editorial Vocabulary">
+    <meta property="og:description" content="Request deletion of your Editorial Vocabulary account and data.">
+    <meta property="og:url" content="https://editorialvocab.github.io/delete-account/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Editorial Vocabulary">
+
+    <link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/editorialvocab/editorialvocab/main/files/dailyEditorial.svg">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #0a0f1e;
+            --bg-alt: #0f1526;
+            --border: #1e2840;
+            --text: #d6dae4;
+            --text-dim: #8892a6;
+            --text-faint: #4b5563;
+            --gold: #c9a84c;
+            --gold-hover: #d4b96a;
+            --danger: #d9776a;
+            --ok: #6bab8e;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+        }
+        main {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 56px 20px 80px;
+        }
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.1rem;
+            font-weight: 700;
+            color: #f0ece2;
+            margin: 0 0 8px;
+        }
+        .eyebrow {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 12px;
+        }
+        .lede {
+            color: var(--text-dim);
+            font-size: 1rem;
+            margin-bottom: 36px;
+        }
+        section {
+            background: var(--bg-alt);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px 26px;
+            margin-bottom: 20px;
+        }
+        section h2 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #f0ece2;
+            margin: 0 0 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .data-list { list-style: none; padding: 0; margin: 0; }
+        .data-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.88rem;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+        .data-list li:last-child { border-bottom: none; }
+        .tag {
+            flex-shrink: 0;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+        .tag.deleted { background: rgba(217,119,106,0.15); color: var(--danger); }
+        .tag.kept { background: rgba(107,171,142,0.15); color: var(--ok); }
+        .data-list span.desc { color: var(--text-dim); }
+        .timeline {
+            font-size: 0.88rem;
+            color: var(--text-dim);
+        }
+        .timeline strong { color: var(--gold); }
+
+        form { display: flex; flex-direction: column; gap: 16px; }
+        label {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-dim);
+            margin-bottom: 6px;
+            display: block;
+        }
+        input, select, textarea {
+            width: 100%;
+            background: #060b18;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 11px 13px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+        textarea { resize: vertical; min-height: 80px; }
+        .field-hint {
+            font-size: 0.72rem;
+            color: var(--text-faint);
+            margin-top: 4px;
+        }
+        .checkbox-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 0.82rem;
+            color: var(--text-dim);
+        }
+        .checkbox-row input { width: auto; margin-top: 3px; }
+        button[type="submit"] {
+            background: var(--gold);
+            color: #0a0f1e;
+            border: none;
+            border-radius: 8px;
+            padding: 13px 20px;
+            font-size: 0.92rem;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background .15s;
+        }
+        button[type="submit"]:hover { background: var(--gold-hover); }
+        .alt-contact {
+            font-size: 0.8rem;
+            color: var(--text-faint);
+            margin-top: 14px;
+            text-align: center;
+        }
+        .alt-contact a { color: var(--gold); text-decoration: none; }
+
+        .badge-app {
+            display: inline-block;
+            font-size: 0.72rem;
+            color: var(--text-faint);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 3px 9px;
+            margin-bottom: 18px;
+        }
+    </style>
+</head>
+<body>
+
+<script src="/header.js"></script>
+
+<main>
+    <div class="badge-app">📱 Editorial Vocabulary · megaminds.dailyeditorialword</div>
+    <div class="eyebrow">Account &amp; Data Deletion</div>
+    <h1>Delete your account</h1>
+    <p class="lede">
+        Use this page to request deletion of your Editorial Vocabulary account and the
+        personal data associated with it. Requests are reviewed and processed by the
+        developer manually — there is currently no in-app self-service deletion, so please
+        allow up to <strong style="color:#c9a84c">7 days</strong> for confirmation.
+    </p>
+
+    <section>
+        <h2>📦 What gets deleted</h2>
+        <ul class="data-list">
+            <li><span class="tag deleted">Deleted</span><span class="desc">Your account and sign-in profile (email/Google account link)</span></li>
+            <li><span class="tag deleted">Deleted</span><span class="desc">Saved words, spaced-repetition review history, and bookmarks</span></li>
+            <li><span class="tag deleted">Deleted</span><span class="desc">XP, streak history, and leaderboard entries</span></li>
+            <li><span class="tag deleted">Deleted</span><span class="desc">Onboarding preferences (exam goal, target date, notification settings)</span></li>
+            <li><span class="tag kept">Retained</span><span class="desc">Purchase / transaction records (Google Play Billing) — kept for accounting, tax, and fraud-prevention obligations, as required by law</span></li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>📝 Request deletion</h2>
+        <form action="https://formsubmit.co/mahadi129727@gmail.com" method="POST">
+            <!-- FormSubmit config -->
+            <input type="hidden" name="_subject" value="Editorial Vocabulary — Account Deletion Request">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_captcha" value="true">
+            <input type="hidden" name="_next" value="https://editorialvocab.github.io/delete-account/thank-you.html">
+
+            <div>
+                <label for="name">Your name</label>
+                <input type="text" id="name" name="Name" required>
+            </div>
+
+            <div>
+                <label for="email">Email or username used in the app</label>
+                <input type="email" id="email" name="Account Email" required>
+                <div class="field-hint">This must match the email or account you signed in with — it's how we locate your data in our system.</div>
+            </div>
+
+            <div>
+                <label for="reason">Reason (optional)</label>
+                <textarea id="reason" name="Reason"></textarea>
+            </div>
+
+            <div class="checkbox-row">
+                <input type="checkbox" id="confirm" name="Confirmation" value="I understand this is permanent" required>
+                <label for="confirm" style="margin:0;font-weight:400;">
+                    I understand this permanently deletes my account data (excluding purchase records retained for legal/accounting purposes), and this cannot be undone.
+                </label>
+            </div>
+
+            <button type="submit">Submit Deletion Request</button>
+        </form>
+        <p class="alt-contact">
+            Prefer email directly? Write to
+            <a href="mailto:mahadi129727@gmail.com?subject=Account%20Deletion%20Request">mahadi129727@gmail.com</a>
+            with the subject "Account Deletion Request" and the email/username tied to your account.
+        </p>
+    </section>
+
+    <section>
+        <h2>⏱️ What happens next</h2>
+        <p class="timeline">
+            You'll receive an email confirmation once your request is submitted. The developer
+            verifies your account and deletes the data listed above within <strong>7 days</strong>.
+            A final confirmation email is sent once deletion is complete. If you have an active
+            Premium subscription, please note that account deletion does not automatically cancel
+            billing — cancel your subscription separately via Google Play &gt; Subscriptions.
+        </p>
+    </section>
+</main>
+
+<script src="/footer.js"></script>
+</body>
+</html>
