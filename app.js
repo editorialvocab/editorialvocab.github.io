@@ -37,9 +37,18 @@ function buildDates(specificDate = null) {
 }
 
 // ── Fetch helper ──────────────────────────────────────────────────
+// NOTE: gl.githack.com is backed by the jsDelivr CDN, which caches
+// branch-referenced files at the edge for up to 12 hours. `cache:
+// "no-store"` only affects the browser's own cache — it does NOT
+// bypass jsDelivr's edge cache. We append a date-based query param
+// so each URL is treated as a *new* resource once per day: the first
+// request of the day forces a fresh origin fetch, and every request
+// after that for the rest of the day is served fast from the CDN
+// cache (once it's populated with today's real data).
 async function fetchJSON(url) {
     try {
-        const r = await fetch(url, { cache: "no-store" });
+        const bustUrl = url + (url.includes("?") ? "&" : "?") + "d=" + state.dates.daily;
+        const r = await fetch(bustUrl, { cache: "no-store" });
         if (!r.ok) return null;
         return await r.json();
     } catch { return null; }
