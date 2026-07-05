@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Monthly Vocabulary eBooks — Editorial Vocabulary</title>
+<meta name="description" content="Monthly PDF vocabulary eBooks for BCS/PSC and UPSC/SSC exam prep. 3-month bundles or the full 12-month archive — delivered instantly via WhatsApp.">
+<meta name="theme-color" content="#0a0f1e">
+<link rel="canonical" href="https://editorialvocab.github.io/ebooks/">
+<link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/editorialvocab/editorialvocab/main/files/dailyEditorial.svg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#0a0f1e; --bg-alt:#0f1526; --border:#1e2840;
+  --text:#d6dae4; --text-dim:#8892a6; --text-faint:#4b5563; --gold:#c9a84c; --gold-hover:#d4b96a;
+  /* Bengali edition palette — matches generate_cards_pdf.py EnToBn config */
+  --bn-p:#E91E63; --bn-ac:#FFC107;
+  /* Hindi edition palette — matches generate_cards_pdf.py EnToHn config */
+  --hn-p:#1565C0; --hn-ac:#FF9800;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.6}
+main{max-width:960px;margin:0 auto;padding:40px 20px 90px}
+
+/* ── Country/language toggle ─────────────────────────────────────── */
+.lang-toggle{display:flex;gap:8px;justify-content:center;margin-bottom:28px}
+.lang-btn{
+  font-family:inherit;font-size:0.9rem;font-weight:700;color:var(--text-dim);
+  background:var(--bg-alt);border:1.5px solid var(--border);border-radius:10px;
+  padding:10px 22px;cursor:pointer;transition:.15s;
+}
+.lang-btn.active{color:#0a0f1e;background:var(--gold);border-color:var(--gold)}
+.lang-btn:not(.active):hover{border-color:var(--gold);color:var(--gold)}
+
+/* ── Hero ─────────────────────────────────────────────────────────── */
+.hero{text-align:center;margin-bottom:36px}
+.hero h1{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:700;color:#f0ece2;margin:0 0 8px}
+.hero p{color:var(--text-dim);font-size:0.95rem;max-width:520px;margin:0 auto}
+
+/* ── Book cover mockup (matches actual PDF cover CSS/colors) ───────── */
+.cover-wrap{display:flex;justify-content:center;margin:28px 0 40px}
+.cover{
+  width:220px;aspect-ratio:210/297;border-radius:6px;position:relative;
+  display:flex;flex-direction:column;align-items:center;justify-content:space-between;
+  text-align:center;padding:20px 16px;color:#fff;
+  box-shadow:0 20px 45px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.06);
+  transform:perspective(900px) rotateY(-8deg);
+  transition:transform .3s;
+}
+.cover:hover{transform:perspective(900px) rotateY(-2deg)}
+.cover.bn{background:linear-gradient(155deg,var(--bn-p) 0%,#7a1140 100%);border:3px solid var(--bn-ac)}
+.cover.hn{background:linear-gradient(155deg,var(--hn-p) 0%,#0d3a75 100%);border:3px solid var(--hn-ac)}
+.cover-logo{font-size:34px}
+.cover-title{font-family:'Playfair Display',serif;font-weight:900;font-size:16px;line-height:1.3}
+.cover-sub{font-size:11px;opacity:.85}
+.cover-badge{font-size:11px;font-weight:700;background:rgba(255,255,255,.18);border-radius:16px;padding:5px 14px}
+.cover-stats{font-size:10px;opacity:.8}
+
+/* ── Sample preview (Scribd embed) ─────────────────────────────────── */
+.sample-section{margin:0 0 40px}
+.sample-wrap{
+  max-width:420px;margin:0 auto;background:var(--bg-alt);border:1px solid var(--border);
+  border-radius:12px;padding:16px;
+}
+.sample-label{font-size:0.8rem;color:var(--text-dim);text-align:center;margin-bottom:10px}
+.sample-label strong{color:#f0ece2}
+.sample-embed-box{
+  position:relative;width:100%;padding-bottom:141.4633%; /* A4 page aspect ratio */
+  border-radius:6px;overflow:hidden;background:#000;
+}
+.sample-embed-box iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
+.sample-fallback{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  margin-top:12px;font-size:0.82rem;font-weight:700;color:var(--gold);
+  text-decoration:none;border:1px solid rgba(201,168,76,.35);border-radius:8px;padding:9px 14px;
+  transition:.15s;
+}
+.sample-fallback:hover{background:rgba(201,168,76,.1);border-color:var(--gold)}
+
+/* ── Pricing cards ────────────────────────────────────────────────── */
+.section-title{font-family:'Playfair Display',serif;font-size:1.3rem;color:#f0ece2;text-align:center;margin:0 0 6px}
+.section-sub{text-align:center;color:var(--text-faint);font-size:0.85rem;margin-bottom:22px}
+
+.best-value{
+  background:var(--bg-alt);border:2px solid var(--gold);border-radius:14px;
+  padding:26px 24px;margin-bottom:26px;text-align:center;position:relative;
+}
+.best-value .ribbon{
+  position:absolute;top:-13px;left:50%;transform:translateX(-50%);
+  background:var(--gold);color:#0a0f1e;font-size:0.7rem;font-weight:800;
+  letter-spacing:.06em;text-transform:uppercase;padding:4px 16px;border-radius:20px;
+}
+.best-value h3{font-size:1.15rem;color:#f0ece2;margin:8px 0 4px}
+.best-value .months{font-size:0.82rem;color:var(--text-dim);margin-bottom:14px}
+.price{font-size:2.1rem;font-weight:900;color:var(--gold)}
+.price small{font-size:0.9rem;font-weight:600;color:var(--text-faint)}
+
+.bundle-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:36px}
+.bundle-card{
+  background:var(--bg-alt);border:1px solid var(--border);border-radius:12px;
+  padding:18px 18px 20px;text-align:center;
+  transition:box-shadow .3s, border-color .3s;
+}
+.bundle-card.bundle-highlight{
+  border-color:var(--gold);
+  box-shadow:0 0 0 3px rgba(201,168,76,.25), 0 0 24px rgba(201,168,76,.35);
+  animation:bundle-pulse 1.8s ease-in-out 2;
+}
+@keyframes bundle-pulse{
+  0%,100%{box-shadow:0 0 0 3px rgba(201,168,76,.25), 0 0 24px rgba(201,168,76,.35);}
+  50%{box-shadow:0 0 0 5px rgba(201,168,76,.4), 0 0 36px rgba(201,168,76,.55);}
+}
+.bundle-card .months{font-size:0.95rem;font-weight:700;color:#f0ece2;margin-bottom:2px}
+.bundle-card .tag{font-size:0.7rem;color:var(--text-faint);margin-bottom:10px}
+.bundle-card .price{font-size:1.5rem}
+
+.buy-btn{
+  display:inline-flex;align-items:center;gap:7px;margin-top:12px;
+  background:#25D366;color:#062b13;font-weight:800;font-size:0.85rem;
+  border:none;border-radius:8px;padding:10px 18px;cursor:pointer;text-decoration:none;
+  transition:filter .15s;
+}
+.buy-btn:hover{filter:brightness(1.08)}
+.best-value .buy-btn{font-size:0.95rem;padding:12px 26px}
+
+/* ── Payment instructions ────────────────────────────────────────── */
+.pay-box{
+  background:var(--bg-alt);border:1px solid var(--border);border-left:3px solid var(--gold);
+  border-radius:10px;padding:20px 22px;margin-bottom:30px;font-size:0.88rem;color:var(--text-dim);
+}
+.pay-box h3{font-size:0.95rem;color:#f0ece2;margin:0 0 12px}
+.pay-box ol{margin:0;padding-left:20px}
+.pay-box li{margin-bottom:8px}
+.pay-box .method-line{
+  background:#060b18;border-radius:8px;padding:10px 14px;margin:10px 0;
+  font-family:'DM Sans',sans-serif;font-weight:700;color:var(--gold);font-size:0.95rem;
+}
+.pay-box .note{font-size:0.78rem;color:var(--text-faint);margin-top:10px}
+
+/* ── FAQ ──────────────────────────────────────────────────────────── */
+.faq{margin-top:8px}
+.faq-item{border-bottom:1px solid var(--border);padding:14px 0}
+.faq-q{font-size:0.9rem;font-weight:700;color:#f0ece2;margin-bottom:4px}
+.faq-a{font-size:0.85rem;color:var(--text-dim)}
+
+.hidden{display:none !important}
+</style>
+</head>
+<body>
+
+<script src="/header.js"></script>
+
+<main>
+  <div class="lang-toggle">
+    <button class="lang-btn active" id="btn-bn" onclick="setLang('bn')">🇧🇩 বাংলা এডিশন</button>
+    <button class="lang-btn" id="btn-hn" onclick="setLang('hn')">🇮🇳 हिंदी संस्करण</button>
+  </div>
+
+  <div class="hero">
+    <h1 id="hero-title">Monthly Vocabulary eBooks</h1>
+    <p id="hero-sub">Every editorial word, meaning, synonym, and MCQ test from the month — as a downloadable PDF you keep forever.</p>
+  </div>
+
+  <div class="cover-wrap">
+    <div class="cover bn" id="cover-bn">
+      <div class="cover-logo">⭐⭐⭐</div>
+      <div>
+        <div class="cover-title">The Daily Star<br>Editorial Vocabulary</div>
+        <div class="cover-sub">Bengali Edition · Monthly eBook</div>
+      </div>
+      <div class="cover-stats">📚 200+ Words · 📝 MCQ Test · 📖 Weekly Revision</div>
+      <div class="cover-badge">June 2026</div>
+    </div>
+    <div class="cover hn hidden" id="cover-hn">
+      <div class="cover-logo">🌟🌟🌟</div>
+      <div>
+        <div class="cover-title">The Hindu<br>Editorial Vocabulary</div>
+        <div class="cover-sub">Hindi Edition · Monthly eBook</div>
+      </div>
+      <div class="cover-stats">📚 200+ Words · 📝 MCQ Test · 📖 Weekly Revision</div>
+      <div class="cover-badge">June 2026</div>
+    </div>
+  </div>
+
+  <div class="sample-section">
+    <div class="sample-wrap">
+      <div class="sample-label" id="sample-label"></div>
+      <div class="sample-embed-box" id="sample-embed-box"></div>
+      <a class="sample-fallback" id="sample-fallback" href="#" target="_blank" rel="noopener">↗ Open Full Sample on Scribd</a>
+    </div>
+  </div>
+
+  <div class="section-title" id="pricing-title">Choose Your Bundle</div>
+  <div class="section-sub" id="pricing-sub">All PDFs delivered by hand via WhatsApp within a few hours of payment</div>
+
+  <div class="best-value">
+    <span class="ribbon">Best Value</span>
+    <h3 id="bv-title">Full Year — All 12 Months</h3>
+    <div class="months" id="bv-months"></div>
+    <div class="price" id="bv-price"></div>
+    <a class="buy-btn" id="bv-buy" href="#">💬 Buy on WhatsApp</a>
+  </div>
+
+  <div class="bundle-grid" id="bundle-grid"></div>
+
+  <div class="pay-box" id="pay-box"></div>
+
+  <div class="section-title">FAQ</div>
+  <div class="faq" id="faq"></div>
+</main>
+
+<script src="/footer.js"></script>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+// MONTHS CATALOG — newest first.
+// When a new month's PDF is ready, add it to the TOP of this array.
+// Bundles are auto-generated from this list, so nothing else needs
+// to change when you add a month.
+// ═══════════════════════════════════════════════════════════════════
+const MONTHS = [
+  "Jun 2026","May 2026","Apr 2026","Mar 2026","Feb 2026","Jan 2026",
+  "Dec 2025","Nov 2025","Oct 2025","Sep 2025","Aug 2025","Jul 2025",
+  "Jun 2025","May 2025","Apr 2025","Mar 2025","Feb 2025","Jan 2025",
+];
+
+const WHATSAPP_NUMBER = "8801713819046"; // same number works for both countries
+
+const CONFIG = {
+  bn: {
+    flag: "🇧🇩", currency: "৳", country: "Bangladesh", editionName: "Daily Star (Bengali)",
+    heroTitle: "মাসিক ভোকাবুলারি ইবুক",
+    heroSub: "প্রতিটি এডিটোরিয়াল শব্দ, অর্থ, প্রতিশব্দ ও MCQ টেস্ট — একটি PDF-এ, চিরকালের জন্য আপনার কাছে।",
+    sampleDocId: "1058246093",
+    sampleMonth: "December 2025",
+    sampleUrl: "https://www.scribd.com/document/1058246093/Editorial-Vocab-Star-Dec-25",
+    sampleLabel: "নমুনা দেখুন",
+    pricingTitle: "আপনার বান্ডেল বেছে নিন",
+    pricingSub: "পেমেন্টের কয়েক ঘণ্টার মধ্যে WhatsApp-এ সব PDF হাতে হাতে পাঠানো হবে",
+    bvTitle: "সম্পূর্ণ বছর — সব ১২ মাস",
+    bundlePrice: 15, bvPrice: 49,
+    payTitle: "💳 পেমেন্ট পদ্ধতি",
+    payMethodLine: "bKash (Send Money): 01713-819046",
+    paySteps: [
+      "উপরের bKash নাম্বারে আপনার বান্ডেলের মূল্য Send Money করুন",
+      "পেমেন্টের স্ক্রিনশট নিন",
+      "নিচের বাটনে চাপ দিন — WhatsApp-এ মেসেজ রেডি থাকবে, শুধু স্ক্রিনশট অ্যাটাচ করে পাঠিয়ে দিন",
+      "সাথে সাথে সব PDF দিয়ে দেওয়া হবে",
+    ],
+    payNote: "প্রশ্ন থাকলে সরাসরি WhatsApp করুন — একই নাম্বার।",
+    faq: [
+      ["পেমেন্ট করার পর কতক্ষণে PDF পাবো?", "সাধারণত কয়েক ঘণ্টার মধ্যেই — screenshot পাঠানোর সাথে সাথে পাঠানো হয়।"],
+      ["আমি কি আলাদা আলাদা মাস কিনতে পারি?", "হ্যাঁ, উপরের যেকোনো ৩ মাসের বান্ডেল আলাদাভাবে কেনা যাবে, অথবা পুরো ১২ মাস একসাথে কম দামে।"],
+      ["পেমেন্টে সমস্যা হলে?", "WhatsApp-এ জানালেই সাহায্য করা হবে।"],
+    ],
+    buyMsgBundle: (label, price) => `আমি বাংলা Editorial Vocabulary eBook বান্ডেল কিনতে চাই: ${label} (৳${price})। পেমেন্ট স্ক্রিনশট পাঠাচ্ছি।`,
+    buyMsgAll: (label, price) => `আমি বাংলা Editorial Vocabulary eBook সম্পূর্ণ বছরের বান্ডেল কিনতে চাই: ${label} (৳${price})। পেমেন্ট স্ক্রিনশট পাঠাচ্ছি।`,
+  },
+  hn: {
+    flag: "🇮🇳", currency: "₹", country: "India", editionName: "Hindu (Hindi)",
+    heroTitle: "मासिक वोकैबुलरी ईबुक",
+    heroSub: "हर महीने के सभी शब्द, अर्थ, पर्यायवाची और MCQ टेस्ट — एक PDF में, हमेशा के लिए आपके पास।",
+    pricingTitle: "अपना बंडल चुनें",
+    pricingSub: "भुगतान के कुछ घंटों के भीतर सभी PDF WhatsApp पर भेज दी जाएंगी",
+    bvTitle: "पूरा साल — सभी 12 महीने",
+    bundlePrice: 15, bvPrice: 49,
+    payTitle: "💳 भुगतान का तरीका (Wise ऐप से)",
+    payMethodLine: "Wise App → Send to bKash: 01713-819046",
+    paySteps: [
+      "Wise ऐप डाउनलोड करें और साइन अप करें (बस कुछ मिनट लगते हैं)",
+      "\"Send money\" चुनें → देश: Bangladesh → प्राप्तकर्ता का mobile money नंबर: 01713-819046",
+      "बंडल की राशि डालें और भेजें",
+      "भुगतान का स्क्रीनशॉट लें, नीचे बटन दबाएं — WhatsApp मैसेज तैयार मिलेगा, स्क्रीनशॉट अटैच करके भेज दें",
+      "तुरंत सभी PDF भेज दी जाएंगी",
+    ],
+    payNote: "बैंकिंग ऐप जैसी KYC की चिंता न करें — छोटी राशि के लिए Wise का साइनअप सरल है। कोई समस्या हो तो सीधे WhatsApp करें।",
+    faq: [
+      ["भुगतान के बाद PDF कब मिलेगी?", "आमतौर पर कुछ घंटों में — स्क्रीनशॉट भेजते ही भेज दी जाती है।"],
+      ["मुझे Wise अकाउंट क्यों चाहिए?", "भारत से सीधे बांग्लादेश के bKash नंबर पर भेजने का यही सबसे आसान तरीका है — डेवलपर के पास भारतीय बैंक खाता नहीं है।"],
+      ["क्या मैं अलग-अलग महीने खरीद सकता/सकती हूं?", "हां, कोई भी 3-महीने का बंडल अलग से खरीदा जा सकता है, या पूरे 12 महीने एक साथ कम दाम में।"],
+    ],
+    buyMsgBundle: (label, price) => `मैं Hindi Editorial Vocabulary eBook बंडल खरीदना चाहता/चाहती हूं: ${label} (₹${price}). भुगतान का स्क्रीनशॉट भेज रहा/रही हूं।`,
+    buyMsgAll: (label, price) => `मैं Hindi Editorial Vocabulary eBook पूरे साल का बंडल खरीदना चाहता/चाहती हूं: ${label} (₹${price}). भुगतान का स्क्रीनशॉट भेज रहा/रही हूं।`,
+  },
+};
+
+function waLink(message) {
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+}
+
+function buildBundles() {
+  // Split MONTHS into non-overlapping groups of 3, newest first.
+  const groups = [];
+  for (let i = 0; i < MONTHS.length; i += 3) {
+    const g = MONTHS.slice(i, i + 3);
+    if (g.length === 3) groups.push(g);
+  }
+  return groups;
+}
+
+function render(lang) {
+  const c = CONFIG[lang];
+  const groups = buildBundles();
+  const last12Label = `${MONTHS[11]} – ${MONTHS[0]}`;
+
+  document.getElementById("hero-title").textContent = c.heroTitle;
+  document.getElementById("hero-sub").textContent = c.heroSub;
+  document.getElementById("pricing-title").textContent = c.pricingTitle;
+  document.getElementById("pricing-sub").textContent = c.pricingSub;
+
+  document.getElementById("bv-title").textContent = c.bvTitle;
+  document.getElementById("bv-months").textContent = last12Label;
+  document.getElementById("bv-price").innerHTML = `${c.currency}${c.bvPrice} <small>/ 12 months</small>`;
+  document.getElementById("bv-buy").href = waLink(c.buyMsgAll(last12Label, c.bvPrice));
+
+  const grid = document.getElementById("bundle-grid");
+  grid.innerHTML = "";
+  groups.forEach(g => {
+    const label = `${g[2]} – ${g[0]}`;
+    const card = document.createElement("div");
+    card.className = "bundle-card";
+    card.dataset.months = JSON.stringify(g);
+    card.innerHTML = `
+      <div class="months">${label}</div>
+      <div class="tag">3-Month Bundle</div>
+      <div class="price">${c.currency}${c.bundlePrice}</div>
+      <a class="buy-btn" href="${waLink(c.buyMsgBundle(label, c.bundlePrice))}">💬 Buy</a>
+    `;
+    grid.appendChild(card);
+  });
+
+  const payBox = document.getElementById("pay-box");
+  payBox.innerHTML = `
+    <h3>${c.payTitle}</h3>
+    <div class="method-line">${c.payMethodLine}</div>
+    <ol>${c.paySteps.map(s => `<li>${s}</li>`).join("")}</ol>
+    <div class="note">${c.payNote}</div>
+  `;
+
+  const faq = document.getElementById("faq");
+  faq.innerHTML = c.faq.map(([q, a]) => `
+    <div class="faq-item">
+      <div class="faq-q">${q}</div>
+      <div class="faq-a">${a}</div>
+    </div>
+  `).join("");
+
+  document.getElementById("cover-bn").classList.toggle("hidden", lang !== "bn");
+  document.getElementById("cover-hn").classList.toggle("hidden", lang !== "hn");
+  document.getElementById("btn-bn").classList.toggle("active", lang === "bn");
+  document.getElementById("btn-hn").classList.toggle("active", lang === "hn");
+}
+
+function setLang(lang) {
+  render(lang);
+  try { localStorage.setItem("ev-ebook-lang", lang); } catch (e) {}
+}
+
+// Convert "MM-YYYY" (as used by web_generator.py's monthly index pages)
+// into the "Mon YYYY" format used throughout the MONTHS catalog above.
+const MONTH_ABBR = ["", "Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function mmYyyyToLabel(mmYyyy) {
+  const parts = mmYyyy.split("-");
+  if (parts.length !== 2) return null;
+  const mm = parseInt(parts[0], 10);
+  if (!mm || mm < 1 || mm > 12) return null;
+  return `${MONTH_ABBR[mm]} ${parts[1]}`;
+}
+
+// Highlight + scroll to whichever bundle card actually contains the
+// requested month (exact match against the stored 3-month group, not
+// the displayed "first – last" range text, since a month in the middle
+// of a bundle wouldn't appear in that text).
+function highlightMonth(targetLabel) {
+  if (!targetLabel) return;
+  const cards = document.querySelectorAll(".bundle-card");
+  for (const card of cards) {
+    let months = [];
+    try { months = JSON.parse(card.dataset.months || "[]"); } catch (e) {}
+    if (months.includes(targetLabel)) {
+      card.classList.add("bundle-highlight");
+      setTimeout(() => card.scrollIntoView({ behavior: "smooth", block: "center" }), 150);
+      return;
+    }
+  }
+  // Not found in any bundle (e.g. a month not yet added to MONTHS) —
+  // fail silently rather than showing a broken highlight.
+}
+
+const params = new URLSearchParams(window.location.search);
+const urlLang = params.get("lang");
+const urlMonth = params.get("month");
+
+// URL ?lang= (from header.js or a monthly index CTA) takes priority
+// over the saved preference, since it reflects where the visitor
+// actually came from just now.
+let initialLang = "bn";
+try {
+  const saved = localStorage.getItem("ev-ebook-lang");
+  if (saved === "hn") initialLang = "hn";
+} catch (e) {}
+if (urlLang === "bn" || urlLang === "hn") initialLang = urlLang;
+
+render(initialLang);
+
+if (urlMonth) {
+  highlightMonth(mmYyyyToLabel(urlMonth));
+}
+</script>
+
+</body>
+</html>
