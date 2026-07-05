@@ -156,8 +156,8 @@ main{max-width:960px;margin:0 auto;padding:40px 20px 90px}
 
 <main>
   <div class="lang-toggle">
-    <button class="lang-btn active" id="btn-bn" onclick="setLang('bn')">🇧🇩 বাংলা এডিশন</button>
-    <button class="lang-btn" id="btn-hn" onclick="setLang('hn')">🇮🇳 हिंदी संस्करण</button>
+    <button class="lang-btn active" id="btn-bn" onclick="setLang('bn')">🇧🇩 Bengali Edition</button>
+    <button class="lang-btn" id="btn-hn" onclick="setLang('hn')">🇮🇳 Hindi Edition</button>
   </div>
 
   <div class="hero">
@@ -232,59 +232,63 @@ const WHATSAPP_NUMBER = "8801713819046"; // same number works for both countries
 
 const CONFIG = {
   bn: {
-    flag: "🇧🇩", currency: "৳", country: "Bangladesh", editionName: "Daily Star (Bengali)",
-    heroTitle: "মাসিক ভোকাবুলারি ইবুক",
-    heroSub: "প্রতিটি এডিটোরিয়াল শব্দ, অর্থ, প্রতিশব্দ ও MCQ টেস্ট — একটি PDF-এ, চিরকালের জন্য আপনার কাছে।",
+    flag: "🇧🇩", currency: "৳", country: "Bangladesh", editionName: "Daily Star (Bengali Edition)",
+    heroTitle: "Monthly Vocabulary eBooks",
+    heroSub: "Every editorial word, meaning, synonym, and MCQ test from the month — as a downloadable PDF you keep forever.",
     sampleDocId: "1058246093",
     sampleMonth: "December 2025",
-    sampleUrl: "https://www.scribd.com/document/1058246093/Editorial-Vocab-Star-Dec-25",
-    sampleLabel: "নমুনা দেখুন",
-    pricingTitle: "আপনার বান্ডেল বেছে নিন",
-    pricingSub: "পেমেন্টের কয়েক ঘণ্টার মধ্যে WhatsApp-এ সব PDF হাতে হাতে পাঠানো হবে",
-    bvTitle: "সম্পূর্ণ বছর — সব ১২ মাস",
+    sampleUrl: "https://www.scribd.com/document/1058246093/Editorial-Vocab-Star-Dec-25?_gl=1*nffxnx*_up*MQ..*_ga*MTAxNDA4Nzk5OC4xNzgzMjcyOTg2*_ga_Z4ZC50DED6*czE3ODMyNzI5ODUkbzEkZzAkdDE3ODMyNzI5ODUkajYwJGwwJGgw*_ga_8KZ8BV0P5W*czE3ODMyNzI5ODUkbzEkZzAkdDE3ODMyNzI5ODUkajYwJGwwJGgw",
+    sampleLabel: "View Sample",
+    pricingTitle: "Choose Your Bundle",
+    pricingSub: "All PDFs delivered by hand via WhatsApp within a few hours of payment",
+    bvTitle: "Full Year — All 12 Months",
     bundlePrice: 15, bvPrice: 49,
-    payTitle: "💳 পেমেন্ট পদ্ধতি",
+    payTitle: "💳 Payment Method (bKash)",
     payMethodLine: "bKash (Send Money): 01713-819046",
     paySteps: [
-      "উপরের bKash নাম্বারে আপনার বান্ডেলের মূল্য Send Money করুন",
-      "পেমেন্টের স্ক্রিনশট নিন",
-      "নিচের বাটনে চাপ দিন — WhatsApp-এ মেসেজ রেডি থাকবে, শুধু স্ক্রিনশট অ্যাটাচ করে পাঠিয়ে দিন",
-      "সাথে সাথে সব PDF দিয়ে দেওয়া হবে",
+      "Send the bundle price to the bKash number above (Send Money)",
+      "Take a screenshot of the payment",
+      "Tap the button below — a WhatsApp message will be ready, just attach the screenshot and send",
+      "All PDFs will be delivered right away",
     ],
-    payNote: "প্রশ্ন থাকলে সরাসরি WhatsApp করুন — একই নাম্বার।",
+    payNote: "Questions? Message the same number directly on WhatsApp.",
     faq: [
-      ["পেমেন্ট করার পর কতক্ষণে PDF পাবো?", "সাধারণত কয়েক ঘণ্টার মধ্যেই — screenshot পাঠানোর সাথে সাথে পাঠানো হয়।"],
-      ["আমি কি আলাদা আলাদা মাস কিনতে পারি?", "হ্যাঁ, উপরের যেকোনো ৩ মাসের বান্ডেল আলাদাভাবে কেনা যাবে, অথবা পুরো ১২ মাস একসাথে কম দামে।"],
-      ["পেমেন্টে সমস্যা হলে?", "WhatsApp-এ জানালেই সাহায্য করা হবে।"],
+      ["How soon will I get the PDFs after paying?", "Usually within a few hours — sent as soon as the payment screenshot arrives."],
+      ["Can I buy individual months separately?", "Yes — any 3-month bundle above can be bought on its own, or get all 12 months together at a lower price."],
+      ["What if there's an issue with payment?", "Just message on WhatsApp and it'll be sorted out."],
     ],
-    buyMsgBundle: (label, price) => `আমি বাংলা Editorial Vocabulary eBook বান্ডেল কিনতে চাই: ${label} (৳${price})। পেমেন্ট স্ক্রিনশট পাঠাচ্ছি।`,
-    buyMsgAll: (label, price) => `আমি বাংলা Editorial Vocabulary eBook সম্পূর্ণ বছরের বান্ডেল কিনতে চাই: ${label} (৳${price})। পেমেন্ট স্ক্রিনশট পাঠাচ্ছি।`,
+    buyMsgBundle: (label, price) => `Hi! I want to buy the Bengali Editorial Vocabulary eBook bundle: ${label} (৳${price}). Sending the payment screenshot now.`,
+    buyMsgAll: (label, price) => `Hi! I want to buy the Bengali Editorial Vocabulary eBook — Full Year bundle: ${label} (৳${price}). Sending the payment screenshot now.`,
   },
   hn: {
-    flag: "🇮🇳", currency: "₹", country: "India", editionName: "Hindu (Hindi)",
-    heroTitle: "मासिक वोकैबुलरी ईबुक",
-    heroSub: "हर महीने के सभी शब्द, अर्थ, पर्यायवाची और MCQ टेस्ट — एक PDF में, हमेशा के लिए आपके पास।",
-    pricingTitle: "अपना बंडल चुनें",
-    pricingSub: "भुगतान के कुछ घंटों के भीतर सभी PDF WhatsApp पर भेज दी जाएंगी",
-    bvTitle: "पूरा साल — सभी 12 महीने",
+    flag: "🇮🇳", currency: "₹", country: "India", editionName: "Hindu (Hindi Edition)",
+    heroTitle: "Monthly Vocabulary eBooks",
+    heroSub: "Every editorial word, meaning, synonym, and MCQ test from the month — as a downloadable PDF you keep forever.",
+    sampleDocId: "1052990116",
+    sampleMonth: "September 2025",
+    sampleUrl: "https://www.scribd.com/document/1038510137/Editorial-Vocab-Hindu-Jan-25?_gl=1*c0m3bu*_up*MQ..*_ga*MTM5MTg0MTY5My4xNzgzMjcyODQ0*_ga_Z4ZC50DED6*czE3ODMyNzI4NDIkbzEkZzAkdDE3ODMyNzI4NDIkajYwJGwwJGgw*_ga_8KZ8BV0P5W*czE3ODMyNzI4NDMkbzEkZzAkdDE3ODMyNzI4NDMkajYwJGwwJGgw",
+    sampleLabel: "View Sample",
+    pricingTitle: "Choose Your Bundle",
+    pricingSub: "All PDFs delivered by hand via WhatsApp within a few hours of payment",
+    bvTitle: "Full Year — All 12 Months",
     bundlePrice: 15, bvPrice: 49,
-    payTitle: "💳 भुगतान का तरीका (Wise ऐप से)",
+    payTitle: "💳 Payment Method (via Wise app)",
     payMethodLine: "Wise App → Send to bKash: 01713-819046",
     paySteps: [
-      "Wise ऐप डाउनलोड करें और साइन अप करें (बस कुछ मिनट लगते हैं)",
-      "\"Send money\" चुनें → देश: Bangladesh → प्राप्तकर्ता का mobile money नंबर: 01713-819046",
-      "बंडल की राशि डालें और भेजें",
-      "भुगतान का स्क्रीनशॉट लें, नीचे बटन दबाएं — WhatsApp मैसेज तैयार मिलेगा, स्क्रीनशॉट अटैच करके भेज दें",
-      "तुरंत सभी PDF भेज दी जाएंगी",
+      "Download the Wise app and sign up (takes just a few minutes)",
+      "Choose \"Send money\" → Country: Bangladesh → Recipient's mobile money number: 01713-819046",
+      "Enter the bundle amount and send",
+      "Take a screenshot of the payment, tap the button below — a WhatsApp message will be ready, attach the screenshot and send",
+      "All PDFs will be delivered right away",
     ],
-    payNote: "बैंकिंग ऐप जैसी KYC की चिंता न करें — छोटी राशि के लिए Wise का साइनअप सरल है। कोई समस्या हो तो सीधे WhatsApp करें।",
+    payNote: "No heavy bank-style KYC to worry about — Wise signup is quick for small amounts. Message WhatsApp directly if anything goes wrong.",
     faq: [
-      ["भुगतान के बाद PDF कब मिलेगी?", "आमतौर पर कुछ घंटों में — स्क्रीनशॉट भेजते ही भेज दी जाती है।"],
-      ["मुझे Wise अकाउंट क्यों चाहिए?", "भारत से सीधे बांग्लादेश के bKash नंबर पर भेजने का यही सबसे आसान तरीका है — डेवलपर के पास भारतीय बैंक खाता नहीं है।"],
-      ["क्या मैं अलग-अलग महीने खरीद सकता/सकती हूं?", "हां, कोई भी 3-महीने का बंडल अलग से खरीदा जा सकता है, या पूरे 12 महीने एक साथ कम दाम में।"],
+      ["When will I get the PDF after payment?", "Usually within a few hours — sent as soon as the payment screenshot arrives."],
+      ["Why do I need a Wise account?", "It's the simplest way to send money directly from India to a Bangladesh bKash number — the developer doesn't have an Indian bank account."],
+      ["Can I buy individual months separately?", "Yes — any 3-month bundle above can be bought on its own, or get all 12 months together at a lower price."],
     ],
-    buyMsgBundle: (label, price) => `मैं Hindi Editorial Vocabulary eBook बंडल खरीदना चाहता/चाहती हूं: ${label} (₹${price}). भुगतान का स्क्रीनशॉट भेज रहा/रही हूं।`,
-    buyMsgAll: (label, price) => `मैं Hindi Editorial Vocabulary eBook पूरे साल का बंडल खरीदना चाहता/चाहती हूं: ${label} (₹${price}). भुगतान का स्क्रीनशॉट भेज रहा/रही हूं।`,
+    buyMsgBundle: (label, price) => `Hi! I want to buy the Hindi Editorial Vocabulary eBook bundle: ${label} (₹${price}). Sending the payment screenshot now.`,
+    buyMsgAll: (label, price) => `Hi! I want to buy the Hindi Editorial Vocabulary eBook — Full Year bundle: ${label} (₹${price}). Sending the payment screenshot now.`,
   },
 };
 
@@ -309,6 +313,11 @@ function render(lang) {
 
   document.getElementById("hero-title").textContent = c.heroTitle;
   document.getElementById("hero-sub").textContent = c.heroSub;
+
+  document.getElementById("sample-label").innerHTML = `📄 <strong>${c.sampleLabel}</strong> — ${c.sampleMonth}`;
+  document.getElementById("sample-embed-box").innerHTML =
+    `<iframe src="https://www.scribd.com/embeds/${c.sampleDocId}/content?start_page=1&view_mode=scroll&show_recommendations=false" loading="lazy" allowfullscreen></iframe>`;
+  document.getElementById("sample-fallback").href = c.sampleUrl;
   document.getElementById("pricing-title").textContent = c.pricingTitle;
   document.getElementById("pricing-sub").textContent = c.pricingSub;
 
