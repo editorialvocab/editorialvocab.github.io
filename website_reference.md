@@ -1,5 +1,5 @@
 # Editorial Vocabulary — Website Reference
-> Last updated: 09 June 2026 | Site: editorialvocab.github.io | Owner: Mahadi Hasan
+> Last updated: 20 July 2026 (synced with July 2026 sprint — see `project_reference.md` §23) | Site: editorialvocab.github.io | Owner: Mahadi Hasan
 
 ---
 
@@ -41,6 +41,8 @@ editorialvocab.github.io/
     │   ├── 08-06-2026/
     │   │   ├── bn/index.html   ← Bengali WOTD page
     │   │   └── hn/index.html   ← Hindi WOTD page
+    │   ├── MM-YYYY/{bn,hn}/index.html  ← NEW (Jul sprint): monthly SEO archive page,
+    │   │                                  one per language, lists every WOTD published that month
     │   └── …one folder per day…
     ├── quiz/
     │   ├── 08-06-2026/
@@ -48,11 +50,21 @@ editorialvocab.github.io/
     │   │   └── hn/index.html   ← Hindi quiz page
     │   └── …one folder per day…
     ├── bcs-vocabulary/
-    │   ├── index.html          ← BCS/PSC archive (all tagged words)
+    │   ├── index.html          ← BCS/PSC archive (all tagged words) — now shows a
+    │   │                          "📅 Browse by Month" pill strip linking to monthly indexes
     │   └── _entries.json       ← Running log (not served, pipeline-only)
-    └── upsc-vocabulary/
-        ├── index.html          ← UPSC/SSC archive
-        └── _entries.json       ← Running log
+    ├── upsc-vocabulary/
+    │   ├── index.html          ← UPSC/SSC archive — same Browse-by-Month strip
+    │   └── _entries.json       ← Running log
+    ├── ebooks/
+    │   └── index.html          ← NEW (Jul sprint): first paid product — monthly PDF
+    │                               eBook bundles, WhatsApp-based checkout, bn/hn editions
+    ├── privacy-policy/
+    │   └── index.html          ← NEW (Jul sprint): full rewrite matching actual data
+    │                               flows (Firebase, AdMob, Play Billing, Crashlytics)
+    └── delete-account/
+        ├── index.html          ← NEW (Jul sprint): FormSubmit.co account-deletion request form
+        └── thank-you.html      ← NEW (Jul sprint)
 ```
 
 ### GitLab repo (`mahadi07/rtejhs`) — pipeline side
@@ -80,10 +92,14 @@ rtejhs/
 | BCS Archive | `…/docs/bcs-vocabulary/` | `append_to_exam_archive("bn")` | Daily (if BCS word) |
 | UPSC Archive | `…/docs/upsc-vocabulary/` | `append_to_exam_archive("hn")` | Daily (if UPSC word) |
 | Words Index | `…/docs/words/` | `generate_words_index()` | Daily |
+| Monthly SEO Index | `…/docs/words/MM-YYYY/{bn,hn}/` | `generate_monthly_index()` | Monthly (day≥28 + day≤5 backfill window) |
+| eBooks Page | `…/docs/ebooks/` | Manual (`docs/ebooks/index.html`) | When bundles/pricing change |
+| Privacy Policy | `…/docs/privacy-policy/` | Manual | When data flows change |
+| Delete Account | `…/docs/delete-account/` | Manual | Static |
 | Sitemap | `editorialvocab.github.io/sitemap.xml` | `update_sitemap()` | Daily |
 
 **Pages generated per day:** 4 (2 WOTD + 2 quiz)  
-**Pages per month:** ~120  
+**Pages per month:** ~120 daily pages + 2 monthly SEO index pages  
 **Pages per year:** ~1,460
 
 ---
@@ -180,6 +196,44 @@ app.js setRegion() saves to localStorage('editorial_region', 'BD'|'IN')
 
 ---
 
+### 4e. Monthly SEO Archive Index (`docs/words/MM-YYYY/{lang}/`) — NEW, July 2026
+
+**File:** `web_generator.generate_monthly_index(lang, year_month)`
+
+One landing page per language per month, listing every WOTD published that month with links back to each daily page. Targets high-volume pre-exam searches like `"June 2026 BCS vocabulary words"`.
+
+**Generation trigger — `maybe_run_monthly_index()` in `main.py`, two idempotent windows:**
+- `day >= 28` → generate the current month (most days already published by then)
+- `day <= 5` → also backfill the *previous* month — covers the case where the day≥28 window was missed entirely (deploy timing, CI outage). This exact gap happened at launch: June's index was missed because the feature shipped after June's day-28-31 window had passed; the day≤5 backfill now catches it automatically going forward.
+
+**Data source:** reads directly from already-generated daily HTML pages under `docs/words/`, not `_entries.json` (which only covers PYQ-sourced words — a subset, would undercount).
+
+**Discoverability:** `_build_exam_html()` (the BCS/UPSC archive builder) shows a "📅 Browse by Month" pill strip, auto-scanning for whichever `MM-YYYY/{lang}/` pages exist, newest-first, capped at 12. Each monthly index page links back with "See the full archive →". No sitemap changes needed — picked up automatically by the existing `update_sitemap()` walker.
+
+---
+
+### 4f. eBooks Page (`docs/ebooks/`) — NEW, July 2026 — First Paid Product
+
+**File:** `docs/ebooks/index.html` (manually maintained, not pipeline-generated)
+
+Sells the existing monthly PDF eBooks (output of `generate_cards_pdf.py` / `generate_10vocab.py`) via manual WhatsApp checkout — no payment gateway integration was viable at this price point.
+
+**Structure:**
+- 6 non-overlapping 3-month bundles from a `MONTHS` catalog array (newest first), plus 1 "Best Value" full-year bundle (most recent 12 months)
+- **Pricing:** 3-month bundle ৳30 (BD) / ₹30 (India); full 12 months ৳99 (BD) / ₹90 (India)
+- Free sample preview via embedded Scribd viewer per edition (Bengali: doc `1058246093`; Hindi: doc `1038510137`), with an always-visible "Open Full Sample on Scribd ↗" fallback link
+- WhatsApp buy buttons (`wa.me` deep links) pre-fill bundle name + price — buyer attaches payment screenshot and sends
+- Deep-link params `?lang=bn|hn` and `?month=MM-YYYY` (used by the monthly-index-page CTA and the homepage's region-aware nav link) auto-select the edition and scroll to the exact bundle
+
+**Payment rails:** Bangladesh — bKash direct, screenshot → WhatsApp. India — no formal gateway exists at this price point (PayPal unavailable in Bangladesh, Payoneer excludes consumer transactions, Gumroad's fees exceed the sale price), so Indian buyers send via Wise directly to the same bKash number.
+
+**Discoverability wiring:**
+- `header.js` — "📖 eBooks" nav button, language-aware via path detection
+- Homepage `index.html` — has its own fully custom nav/footer (does **not** use `header.js`/`footer.js`, unlike every other page — needs a separate edit for any future header/footer change) — added region-aware eBooks nav link + footer link
+- Monthly index pages — "📖 Get {Month Year} eBook" CTA linking to `ebooks/?lang={lang}&month={mm_yyyy}`
+
+---
+
 ## 5. web_generator.py Module Reference
 
 **Location:** `rtejhs/web_generator.py`
@@ -247,6 +301,16 @@ update_sitemap() -> None
 # Also includes BCS/UPSC archive and words index if they exist
 ```
 
+```python
+generate_monthly_index(
+    lang:       str,  # "bn" or "hn"
+    year_month: str,  # "06-2026"
+) -> None
+# Writes: docs/words/MM-YYYY/{lang}/index.html
+# NEW — July 2026 sprint. Walks docs/words/ for all dates in that month,
+# reads already-generated daily HTML (not _entries.json). Idempotent.
+```
+
 ### Key Internal Functions
 
 ```python
@@ -293,9 +357,20 @@ if quiz_success and quiz_hn.get("questions"):
 ensure_nojekyll()
 generate_words_index()
 update_sitemap()
+maybe_run_monthly_index()  # NEW — day>=28 (current month) or day<=5 (backfill previous)
 
 # 4. push_docs_to_github_pages() — already in main.py, no change needed
 ```
+
+### July 2026 Sprint — Pipeline Fixes (see `project_reference.md` §23.3 for full detail)
+
+Three separate root causes were found behind recurring "Word of the Day not available" reports — worth knowing since all three live in the pipeline files this doc covers:
+
+1. **CI push silently no-op'd.** `main()`'s exit logic couldn't distinguish "push deferred to `.gitlab-ci.yml`'s CI step" from "genuinely failed," and called `sys.exit(1)` either way — killing the CI job *before* the actual push ran. Fixed with a `_is_gitlab_ci()` helper so a CI-deferred push exits 0.
+2. **`gl.githack.com` CDN caching.** The WOTD JSON URL is reused all month (daily entries appended in place), so a stale cached copy could sit indefinitely. Fixed with `purge_githack_cache(current_date)` called after a confirmed successful push, plus a matching purge step in `.gitlab-ci.yml`.
+3. **Purge requests silently failing with HTTP 403.** `raw.githack.com` sits behind Cloudflare, which blocked the default Python `urllib`/`curl` User-Agent as bot traffic. Fixed by sending a real browser User-Agent on both the Python and CI purge calls. Confirm via pipeline logs: `🧹 githack cache purge requested for 6/6 files` (not `0/6`).
+
+**Also:** `GITHUB_PAGES_REPO`, `GITHUB_PAGES_TOKEN`, `GITHUB_PAGES_BRANCH` were only ever in local `local.env`, never added to GitLab's CI/CD Variables store — so `push_docs_to_github_pages()` always no-op'd under CI. Now added as GitLab CI/CD Variables (see updated status note under §6's env var table below).
 
 ### Environment Variables for `push_docs_to_github_pages()`
 
@@ -307,6 +382,8 @@ update_sitemap()
 | `GITHUB_PAGES_TARGET_PATH` | `""` (empty string) | ⚠️ Must be empty so pages go to repo root, not `/docs/docs/` |
 
 **⚠️ Critical:** If `GITHUB_PAGES_TARGET_PATH` is set to `"docs"` the generated files land at `/docs/docs/words/…` which is the wrong URL. Set it to empty string `""`.
+
+**Status (July 2026 sprint):** `GITHUB_PAGES_REPO`, `GITHUB_PAGES_TOKEN`, and `GITHUB_PAGES_BRANCH=VSCode` are now added to GitLab's CI/CD Variables store (previously only in local `local.env`, so this always no-op'd under CI — see fix #23.3 above).
 
 ---
 
@@ -375,6 +452,8 @@ Sitemap: https://editorialvocab.github.io/sitemap.xml
 
 ## 9. AdSense Path
 
+**Note (July 2026):** the eBooks page (§4f) is now the site's first *live* monetization product — manual WhatsApp checkout, no gateway. It doesn't depend on AdSense approval and can generate revenue immediately; AdSense remains the separate, longer-horizon path below.
+
 ### Requirements and current status
 
 | Requirement | Target | Current status |
@@ -414,34 +493,22 @@ Jun 2027  ~1,460 pages, $20–40/month website ad revenue
 
 ## 10. Page Growth Roadmap
 
-### Currently live (June 2026)
+### Currently live (updated July 2026)
 - ✅ Daily WOTD pages (bn + hn)
 - ✅ Daily quiz pages (bn + hn)
 - ✅ BCS vocabulary archive
 - ✅ UPSC vocabulary archive
 - ✅ Words index (redirect)
+- ✅ **Monthly SEO archive index** (`docs/words/MM-YYYY/{bn,hn}/`) — shipped July 2026, see §4e
+- ✅ **eBooks page** (`docs/ebooks/`) — first paid product, shipped July 2026, see §4f
+- ✅ Privacy Policy page (`docs/privacy-policy/`) — full rewrite, July 2026
+- ✅ Delete Account page (`docs/delete-account/`) — July 2026, required for Play Console Data Safety form
 
 ### Next — high value, low effort
-
-**Monthly word index** — `docs/words/06-2026/bn/index.html`
-Lists all 30 words of the month with links. Auto-generated at month end.
-Target query: `"June 2026 BCS vocabulary words"` — high search volume before exams.
-
-```python
-# Add to web_generator.py:
-def generate_monthly_index(lang: str, year_month: str) -> None:
-    # year_month = "06-2026"
-    # Walks docs/words/ for all dates in that month
-    # Writes docs/words/06-2026/{lang}/index.html
-```
 
 **Synonyms/Antonyms page** — `docs/word/PRAGMATIC/`
 Permanent page for each word. Aggregates every time that word appeared.
 Target query: `"PRAGMATIC synonyms antonyms UPSC"` — evergreen, high traffic.
-
-**eBook landing page** — `docs/ebook/`
-Static page describing the vocabulary eBook with download link.
-Doubles as an AdSense-eligible content page and eBook sales page.
 
 ### Longer term
 
@@ -468,6 +535,12 @@ Doubles as an AdSense-eligible content page and eBook sales page.
 | app.js region not saved | ⚠️ Pending | Add `localStorage.setItem` to `setRegion()` |
 | Quiz breadcrumb double href | ✅ Fixed | Fixed in web_generator.py v2 |
 | Archive pages not linked from nav | ✅ Fixed | Lang-aware nav shows correct archive |
+| GitLab CI push silently no-op'd | ✅ Fixed (Jul 2026) | `main()` exit logic called `sys.exit(1)` even when the push was correctly deferred to `.gitlab-ci.yml`'s CI step, killing the job before that step ran. New `_is_gitlab_ci()` helper distinguishes the two cases. |
+| `gl.githack.com` stale cache | ✅ Fixed (Jul 2026) | Monthly WOTD JSON URL reused all month, so a stale cached copy could persist. `purge_githack_cache()` fires after each confirmed push. |
+| Githack purge requests returning HTTP 403 | ✅ Fixed (Jul 2026) | Cloudflare was blocking the default Python/curl User-Agent as bot traffic. Both purge call sites now send a real browser User-Agent. |
+| GitHub Pages push vars missing from GitLab CI | ✅ Fixed (Jul 2026) | `GITHUB_PAGES_REPO`/`TOKEN`/`BRANCH` were only in local `.env`, never in GitLab CI/CD Variables — added this sprint. |
+| Monthly SEO index missed for launch month | ✅ Fixed (Jul 2026) | Feature shipped after June's day-28→31 window had passed, so June was silently skipped. `maybe_run_monthly_index()`'s day≤5 backfill window now catches this automatically going forward. |
+| Monthly index pages had zero inbound links | ✅ Fixed (Jul 2026) | BCS/UPSC archive pages now show a "📅 Browse by Month" pill strip. |
 
 ---
 
@@ -479,6 +552,8 @@ Doubles as an AdSense-eligible content page and eBook sales page.
 - [ ] Check `/docs/bcs-vocabulary/` and `/docs/upsc-vocabulary/` show entries
 - [ ] Verify `sitemap.xml` at root has today's new page URLs
 - [ ] Google Search Console → Coverage — no "Excluded" pages for new URLs
+- [ ] Near month-end (day≥28) or month-start (day≤5) — check `docs/words/MM-YYYY/{bn,hn}/` generated and linked from the Browse-by-Month strip
+- [ ] Confirm pipeline logs show `🧹 githack cache purge requested for 6/6 files` (not `0/6`)
 
 ---
 
