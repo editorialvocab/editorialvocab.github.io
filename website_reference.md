@@ -440,12 +440,14 @@ This creates a full crawl mesh so Google discovers every page from any entry poi
 
 ### robots.txt
 
+**Corrected 21 Jul 2026** — the block below was stale; confirmed against the actual live file during a Search Console indexing investigation (see §11). The real Sitemap line uses the `/docs/` prefix (matching `DOCS_URL`), not the site root:
+
 ```
 User-agent: *
 Allow: /
-Disallow: /docs/bcs-vocabulary/_entries.json
-Disallow: /docs/upsc-vocabulary/_entries.json
-Sitemap: https://editorialvocab.github.io/sitemap.xml
+Disallow: /logs/
+Disallow: /EdData/
+Sitemap: https://editorialvocab.github.io/docs/sitemap.xml
 ```
 
 ---
@@ -541,6 +543,7 @@ Target query: `"PRAGMATIC synonyms antonyms UPSC"` — evergreen, high traffic.
 | GitHub Pages push vars missing from GitLab CI | ✅ Fixed (Jul 2026) | `GITHUB_PAGES_REPO`/`TOKEN`/`BRANCH` were only in local `.env`, never in GitLab CI/CD Variables — added this sprint. |
 | Monthly SEO index missed for launch month | ✅ Fixed (Jul 2026) | Feature shipped after June's day-28→31 window had passed, so June was silently skipped. `maybe_run_monthly_index()`'s day≤5 backfill window now catches this automatically going forward. |
 | Monthly index pages had zero inbound links | ✅ Fixed (Jul 2026) | BCS/UPSC archive pages now show a "📅 Browse by Month" pill strip. |
+| Search Console: sitemap "Couldn't fetch", 0 discovered pages | ✅ Resolved (21 Jul 2026) | Investigated as a suspected malformed-XML bug; first read (via browser's pretty-printed XML viewer) looked broken — missing `xmlns`, newlines inside `<loc>` — but that was the viewer's rendering, not the actual file. Raw `curl`/`view-source:` confirmed the live `sitemap.xml` was already well-formed (223 URLs, correct namespace). Root cause: `update_sitemap()` already had a documented fix for a stray-`\r`-in-path-component bug from an earlier session; Search Console's "Couldn't fetch" was just a stale cached result from *before* that fix shipped. No code change needed — fixed by removing and re-adding the sitemap in Search Console to force a fresh fetch. **Lesson**: always verify via raw source (`curl`/`view-source:`), not a browser's rendered XML view, before concluding a sitemap is malformed. |
 
 ---
 
@@ -550,8 +553,8 @@ Target query: `"PRAGMATIC synonyms antonyms UPSC"` — evergreen, high traffic.
 - [ ] Open a generated quiz page — click "Show Answer" on Q1, confirm it expands
 - [ ] Check `/docs/words/` redirects correctly (BD user → BCS, India user → UPSC)
 - [ ] Check `/docs/bcs-vocabulary/` and `/docs/upsc-vocabulary/` show entries
-- [ ] Verify `sitemap.xml` at root has today's new page URLs
-- [ ] Google Search Console → Coverage — no "Excluded" pages for new URLs
+- [ ] Verify `docs/sitemap.xml` (not site root — see §11 robots.txt correction) has today's new page URLs
+- [ ] Google Search Console → Indexing → Sitemaps — status should read "Success" with a real discovered-pages count, not "Couldn't fetch". If it shows a stale failure after a known-good fix, remove and re-add the sitemap entry to force a fresh read rather than waiting.
 - [ ] Near month-end (day≥28) or month-start (day≤5) — check `docs/words/MM-YYYY/{bn,hn}/` generated and linked from the Browse-by-Month strip
 - [ ] Confirm pipeline logs show `🧹 githack cache purge requested for 6/6 files` (not `0/6`)
 
