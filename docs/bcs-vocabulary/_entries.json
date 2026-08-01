@@ -358,5 +358,13 @@
     "source": "BCS 43",
     "date": "31-07-2026",
     "lang": "bn"
+  },
+  {
+    "word": "Ambiguous",
+    "meaning": "অস্পষ্ট বা দ্ব্যর্থবোধক",
+    "definition": "Open to multiple interpretations.",
+    "source": "BCS 37",
+    "date": "01-08-2026",
+    "lang": "bn"
   }
 ]
