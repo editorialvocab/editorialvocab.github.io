@@ -1,0 +1,64 @@
+name: Web Pipeline (Backup)
+
+# WHY THIS EXISTS
+# ─────────────────
+# The PRIMARY web pipeline is web_pipeline.py, running on GitLab CI
+# (mahadi07/rtejhs, `web_pipeline` stage, SCHEDULE_TYPE=web_pipeline,
+# 09:15 UTC) and locally via local_runner.py. This workflow is a BACKUP
+# that runs entirely inside this repo via GitHub Actions, so the site
+# still gets today's pages if GitLab CI is ever down. Safe to run even
+# when the primary already succeeded — regenerating identical content
+# from the same source data produces an empty diff, and the commit
+# step below is a no-op in that case.
+
+on:
+  schedule:
+    # 09:30 UTC daily = 3:30 PM Dhaka — 15 min after the primary GitLab
+    # job (09:15 UTC), giving it a head start.
+    - cron: '30 9 * * *'
+  workflow_dispatch:
+    inputs:
+      pipeline_date:
+        description: 'Override date (DD-MM-YYYY) — leave empty for today'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout editorialvocab.github.io (VSCode branch)
+        uses: actions/checkout@v4
+        with:
+          ref: VSCode
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Shallow sparse-clone mahadi07/rtejhs (public — no token needed)
+        run: |
+          git clone --depth 1 --filter=blob:none --sparse https://gitlab.com/mahadi07/rtejhs.git gitlab_src
+          git -C gitlab_src sparse-checkout set web_generator.py EdData/data
+
+      - name: Generate web pages
+        env:
+          GITLAB_SRC: gitlab_src
+          PIPELINE_DATE: ${{ github.event.inputs.pipeline_date }}
+        run: python scripts/generate_web_pages_backup.py
+
+      - name: Commit + push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if [ -n "$(git status --porcelain docs/)" ]; then
+            git add docs/
+            git commit -m "Backup web pipeline update - $(date -u '+%d-%m-%Y %H:%M UTC')"
+            git push origin VSCode
+          else
+            echo "ℹ️  No changes to docs/ — the primary GitLab run already covered today."
+          fi
