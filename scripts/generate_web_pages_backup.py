@@ -15,11 +15,17 @@ GitLab CI is down.
 
 WHERE THE DATA COMES FROM
 ────────────────
-mahadi07/rtejhs is public, so the workflow does a throwaway shallow
-sparse-clone of it into GITLAB_SRC (see web-pipeline-backup.yml) before
-this script runs, and this script imports web_generator.py from there.
-That file has zero third-party or repo-internal imports, so it runs
-standalone here with no extra pip installs.
+mahadi07/rtejhs is public, so the workflow does a shallow clone of it
+into GITLAB_SRC (see web-pipeline-backup.yml) before this script runs
+— but only for EdData/data (the part that changes daily).
+
+web_generator.py itself is now VENDORED into this repo, right next to
+this script (scripts/web_generator.py), instead of being pulled from
+the GitLab clone. It changes rarely, so keeping a local copy removes
+an entire class of "did the clone actually contain it" failure modes.
+If you update web_generator.py in mahadi07/rtejhs, copy the new
+version here too — they're expected to drift only when you do that on
+purpose.
 
 The three tiny loader functions below are duplicated from
 _load_vocab_from_file / _load_saved_wotd_entry / _load_saved_quiz_data
@@ -42,8 +48,13 @@ import sys
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
+# Make sure this script's own directory (where the vendored
+# web_generator.py lives) is searched first — explicit, rather than
+# relying on Python's implicit "script dir goes in sys.path[0]"
+# behavior, so this still works if the invocation style ever changes.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 GITLAB_SRC = os.environ.get("GITLAB_SRC", "gitlab_src")
-sys.path.insert(0, GITLAB_SRC)
 
 from web_generator import (          # noqa: E402  (needs sys.path set first)
     generate_wotd_page,

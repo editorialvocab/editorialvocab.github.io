@@ -10,6 +10,13 @@ name: Web Pipeline (Backup)
 # when the primary already succeeded — regenerating identical content
 # from the same source data produces an empty diff, and the commit
 # step below is a no-op in that case.
+#
+# web_generator.py is VENDORED into this repo (scripts/web_generator.py)
+# rather than pulled from the GitLab clone — it changes rarely, so a
+# local copy is simpler and more reliable than depending on a clone of
+# another repo containing it. The GitLab clone below is only for
+# EdData/ (today's vocab/WOTD/quiz — the part that actually changes
+# daily and can't be vendored).
 
 on:
   schedule:
@@ -39,7 +46,7 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Shallow-clone mahadi07/rtejhs (public — no token needed)
+      - name: Shallow-clone mahadi07/rtejhs for today's EdData
         run: git clone --depth 1 https://gitlab.com/mahadi07/rtejhs.git gitlab_src
 
       - name: Generate web pages
