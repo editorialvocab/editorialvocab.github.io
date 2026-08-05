@@ -13,9 +13,8 @@ name: Web Pipeline (Backup)
 
 on:
   schedule:
-    # 09:30 UTC daily = 3:30 PM Dhaka — 15 min after the primary GitLab
-    # job (09:15 UTC), giving it a head start.
-    - cron: '30 9 * * *'
+    # 03:30 UTC daily = 9:30 AM Dhaka
+    - cron: '30 3 * * *'
   workflow_dispatch:
     inputs:
       pipeline_date:
