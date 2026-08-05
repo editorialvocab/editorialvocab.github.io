@@ -137,6 +137,25 @@ def main() -> None:
     if not wotd_bn_entry and not wotd_hn_entry:
         print(f"⚠️  No WOTD data found in mahadi07/rtejhs for {current_date} yet.")
         print("    Either today's main_pipeline hasn't run/pushed yet, or it failed.")
+        print()
+        print("── DIAGNOSTICS ──────────────────────────────────────────")
+        display_date = datetime.strptime(current_date, "%d-%m-%Y").strftime("%d %B %Y")
+        month_file = f"{current_date.split('-')[1]}-{current_date.split('-')[2]}"
+        print(f"Looking for display_date = {display_date!r} inside monthly file {month_file}.json")
+        for lang, folder in (("bn", "WordOfTheDayEnToBn"), ("hn", "WordOfTheDayEnToHn")):
+            path = f"{GITLAB_SRC}/EdData/data/{folder}/{month_file}.json"
+            if not os.path.exists(path):
+                print(f"[{lang}] {path} — FILE DOES NOT EXIST in the clone")
+                continue
+            try:
+                with open(path, "r", encoding="utf-8") as fh:
+                    monthly_list = json.load(fh)
+                print(f"[{lang}] {path} — found, {len(monthly_list)} entries")
+                dates_present = [e.get("date") for e in monthly_list]
+                print(f"[{lang}] last 3 dates in file: {dates_present[-3:]}")
+            except Exception as e:
+                print(f"[{lang}] {path} — exists but failed to parse: {e}")
+        print("────────────────────────────────────────────────────────")
         print("    Exiting 1 — this workflow's own schedule will retry tomorrow.")
         sys.exit(1)
 
