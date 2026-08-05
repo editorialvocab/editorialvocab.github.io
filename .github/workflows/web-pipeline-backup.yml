@@ -39,10 +39,8 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Shallow sparse-clone mahadi07/rtejhs (public — no token needed)
-        run: |
-          git clone --depth 1 --filter=blob:none --sparse https://gitlab.com/mahadi07/rtejhs.git gitlab_src
-          git -C gitlab_src sparse-checkout set web_generator.py EdData/data
+      - name: Shallow-clone mahadi07/rtejhs (public — no token needed)
+        run: git clone --depth 1 https://gitlab.com/mahadi07/rtejhs.git gitlab_src
 
       - name: Generate web pages
         env:
