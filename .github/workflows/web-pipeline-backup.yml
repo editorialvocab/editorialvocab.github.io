@@ -47,7 +47,11 @@ jobs:
           python-version: '3.11'
 
       - name: Shallow-clone mahadi07/rtejhs for today's EdData
-        run: git clone --depth 1 https://gitlab.com/mahadi07/rtejhs.git gitlab_src
+        run: |
+          git clone --depth 1 https://gitlab.com/mahadi07/rtejhs.git gitlab_src
+          echo "── cloned branch + latest commit ──"
+          git -C gitlab_src branch --show-current
+          git -C gitlab_src log -1 --oneline
 
       - name: Generate web pages
         env:

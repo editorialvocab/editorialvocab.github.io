@@ -155,6 +155,30 @@ def main() -> None:
                 print(f"[{lang}] last 3 dates in file: {dates_present[-3:]}")
             except Exception as e:
                 print(f"[{lang}] {path} — exists but failed to parse: {e}")
+
+        # Broader look, since the expected file wasn't found above —
+        # show what the clone actually contains so we can see whether
+        # this is a wrong-branch/stale-clone problem vs. a path problem.
+        print()
+        print(f"── {GITLAB_SRC} top level ──")
+        if os.path.isdir(GITLAB_SRC):
+            print(sorted(os.listdir(GITLAB_SRC)))
+        else:
+            print(f"{GITLAB_SRC!r} does not exist at all — clone step likely failed silently")
+
+        print(f"── {GITLAB_SRC}/EdData top level (if present) ──")
+        eddata_path = f"{GITLAB_SRC}/EdData"
+        if os.path.isdir(eddata_path):
+            print(sorted(os.listdir(eddata_path)))
+        else:
+            print("EdData/ not present in the clone")
+
+        print(f"── {GITLAB_SRC}/EdData/data top level (if present) ──")
+        data_path = f"{GITLAB_SRC}/EdData/data"
+        if os.path.isdir(data_path):
+            print(sorted(os.listdir(data_path)))
+        else:
+            print("EdData/data/ not present in the clone")
         print("────────────────────────────────────────────────────────")
         print("    Exiting 1 — this workflow's own schedule will retry tomorrow.")
         sys.exit(1)
